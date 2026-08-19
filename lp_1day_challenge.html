@@ -1,0 +1,999 @@
+<title>売れるアプリ開発 1DAYチャレンジ会</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap">
+
+<style>
+/* ============================================================
+   売れるアプリ開発 1DAYチャレンジ会 — 募集ページ
+   コンセプト：ページ全体が「10:00 → 17:00 の、一日」。
+   地色が朝の光から夕方の光へ移動し、最後に日が落ちる。
+   単一の視覚世界にコミットした設計のため、ダークテーマの
+   切り替えは持たない（配色はすべて明示指定）。
+   ============================================================ */
+
+:root{
+  /* ink */
+  --ink:        #17202B;
+  --ink-2:      #48566A;
+  --ink-3:      #7C8899;
+  --rule:       rgba(23,32,43,.13);
+  --rule-2:     rgba(23,32,43,.28);
+
+  /* 朱 — 唯一のアクセント */
+  --accent:     #C8402A;
+  --accent-dp:  #A5311E;
+  --accent-mk:  rgba(200,64,42,.18);
+
+  /* 一日の光 */
+  --dawn:       #E7EDEF;
+  --morning:    #F1F0EB;
+  --noon:       #F3EFE7;
+  --after:      #F6EEE0;
+  --gold:       #F8E9D2;
+  --dusk:       #141C2B;
+  --dusk-2:     #1E2942;
+  --dusk-ink:   #EFE8DB;
+  --dusk-ink-2: #A3AEC2;
+
+  --paper-card: #FCFAF6;
+
+  --font-display: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-body:    "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-util:    "Barlow Condensed", "Zen Kaku Gothic New", sans-serif;
+
+  --shell: 1180px;
+  --measure: 42rem;
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html{ -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body{
+  margin:0;
+  font-family: var(--font-body);
+  font-weight:400;
+  color: var(--ink);
+  background: var(--dawn);
+  line-height: 1.95;
+  font-size: 16.5px;
+  letter-spacing: .015em;
+  overflow-x: hidden;
+}
+
+/* 一日の光の移動 — 全編に一枚のグラデーションを敷く */
+.page{
+  position: relative;
+  background:
+    linear-gradient(180deg,
+      var(--dawn)    0%,
+      var(--dawn)    6%,
+      var(--morning) 24%,
+      var(--noon)    48%,
+      var(--after)   70%,
+      var(--gold)    88%,
+      var(--gold)   100%);
+}
+
+/* 紙の粒子 */
+.grain{
+  position: fixed; inset: 0; z-index: 60; pointer-events: none;
+  opacity: .5; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
+}
+
+.shell{ width: min(100% - 2.5rem, var(--shell)); margin-inline: auto; }
+
+/* ── 左端の時刻レール ───────────────────────────── */
+.rail{
+  position: fixed; left: 26px; top: 12vh; bottom: 12vh;
+  width: 62px; z-index: 40; pointer-events: none;
+  display: none;
+}
+.rail__line{
+  position: absolute; left: 9px; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(180deg, rgba(23,32,43,.05), rgba(23,32,43,.3) 15%, rgba(23,32,43,.3) 85%, rgba(23,32,43,.05));
+}
+.rail__mark{
+  position: absolute; left: 0; top: 0; will-change: transform;
+  display: flex; align-items: center; gap: .5rem;
+}
+.rail__dot{
+  width: 19px; height: 19px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px rgba(200,64,42,.14);
+}
+.rail__now{
+  font-family: var(--font-util); font-weight: 600; font-size: 1.05rem;
+  letter-spacing: .06em; color: var(--accent-dp); font-variant-numeric: tabular-nums;
+}
+@media (min-width: 1180px){ .rail{ display:block; } }
+
+/* ── 共通パーツ ───────────────────────────────── */
+.eyebrow{
+  font-family: var(--font-util); font-weight: 600;
+  font-size: .8rem; letter-spacing: .34em; text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex; align-items: center; gap: .85rem;
+  margin: 0 0 1.4rem;
+}
+.eyebrow::after{ content:""; flex:1; height:1px; background: var(--rule); }
+
+h2{
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+  line-height: 1.55; letter-spacing: .005em;
+  text-wrap: balance; margin: 0 0 1.6rem;
+}
+h3{
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.12rem; line-height: 1.7; margin: 0;
+}
+p{ margin: 0 0 1.35em; }
+strong{ font-weight: 600; }
+
+/* 本文中の強調（黄色ハイライトの代替：朱のマーカー） */
+.mk{
+  font-weight: 600;
+  background-image: linear-gradient(transparent 62%, var(--accent-mk) 62%);
+  padding-bottom: .05em;
+}
+.ac{ color: var(--accent-dp); font-weight: 600; }
+
+section{ position: relative; }
+.band{ padding: clamp(3.8rem, 6.5vw, 5.8rem) 0; }
+
+/* ── ヒーロー ─────────────────────────────────── */
+.hero{ padding: clamp(3rem, 6vw, 5rem) 0 0; }
+.hero__brand{
+  font-family: var(--font-util); font-weight: 600;
+  font-size: .78rem; letter-spacing: .4em; text-transform: uppercase;
+  color: var(--ink-2);
+  display: flex; align-items: center; gap: 1rem; margin-bottom: clamp(3rem,6vw,4.5rem);
+}
+.hero__brand span::after{ content:""; }
+.hero__brand em{
+  font-style: normal; color: var(--ink-3); letter-spacing: .24em;
+  font-size: .72rem;
+}
+.hero__brand::before{
+  content:""; width: 34px; height:1px; background: var(--rule-2);
+}
+
+.hero__grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 5vw, 3.5rem);
+  align-items: end;
+}
+@media (min-width: 900px){
+  .hero__grid{ grid-template-columns: minmax(0,1fr) minmax(0,.72fr); }
+}
+
+/* 第1階層 */
+.lead1{
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1rem, 2.15vw, 1.28rem);
+  line-height: 2.15; letter-spacing: .04em; color: var(--ink-2);
+  margin: 0 0 clamp(1.6rem, 3vw, 2.2rem);
+}
+.job{
+  color: var(--accent-dp); font-weight: 900;
+  position: relative; white-space: nowrap;
+}
+
+/* 第2階層＝イベント名 */
+.title{
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(2.65rem, 8.2vw, 5.15rem);
+  line-height: 1.13; letter-spacing: -.025em;
+  margin: 0 0 clamp(1.7rem, 3.4vw, 2.4rem);
+}
+.title .sell{ color: var(--accent); }
+.title .small{
+  display:block; font-size: .77em; letter-spacing: -.01em; margin-top: .12em;
+}
+
+/* 第3階層 */
+.lead3{
+  font-family: var(--font-body); font-weight: 400;
+  font-size: clamp(1rem, 2vw, 1.14rem);
+  line-height: 2.1; letter-spacing: .045em; color: var(--ink);
+  margin: 0; padding-left: 1.15rem;
+  border-left: 2px solid var(--accent);
+}
+
+/* 右カラム：一日の分岐図 */
+.diverge{ width: 100%; }
+.diverge svg{ width: 100%; height: auto; display: block; overflow: visible; }
+.diverge__cap{
+  display:flex; justify-content: space-between; gap: 1rem;
+  font-family: var(--font-util); font-weight:600; font-size:.76rem;
+  letter-spacing: .16em; color: var(--ink-3); margin-top: .9rem;
+}
+.dv-path{ fill:none; stroke: var(--ink); stroke-width: 1.25; opacity:.3; }
+.dv-path.is-hot{ stroke: var(--accent); opacity:.9; stroke-width: 1.75; }
+.dv-node{ fill: var(--ink); opacity:.45; }
+.dv-node.is-hot{ fill: var(--accent); opacity:1; }
+.dv-seed{ fill: var(--accent); }
+
+/* ヒーロー写真帯 */
+.hero__photo{
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+  position: relative; width: 100%;
+}
+.hero__photo img{
+  display:block; width:100%; height: clamp(300px, 46vw, 560px);
+  object-fit: cover; object-position: center 42%;
+}
+.hero__photo::after{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(231,237,239,.28) 0%, rgba(231,237,239,0) 22%, rgba(20,28,43,.06) 100%);
+}
+
+/* 情報帯（ヘッダー直下） */
+.factstrip{
+  position: relative; z-index: 2;
+  margin-top: -2.6rem;
+  background: var(--paper-card);
+  border: 1px solid var(--rule);
+  box-shadow: 0 22px 44px -30px rgba(23,32,43,.55);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+}
+@media (min-width: 620px){ .factstrip{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
+@media (min-width: 1000px){ .factstrip{ grid-template-columns: repeat(7, minmax(0,1fr)); } }
+.fact{
+  padding: 1.15rem 1.15rem 1.25rem;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.fact:last-child{ border-right: none; }
+@media (min-width: 1000px){ .fact{ border-bottom: none; } }
+.fact dt{
+  font-family: var(--font-util); font-weight:600; font-size:.72rem;
+  letter-spacing:.22em; text-transform: uppercase; color: var(--ink-3);
+  margin-bottom:.45rem;
+}
+.fact dd{
+  margin:0; font-family: var(--font-display); font-weight:700;
+  font-size: .95rem; line-height:1.55; letter-spacing:.01em;
+}
+.fact dd small{ display:block; font-weight:500; font-size:.78rem; color: var(--ink-2); letter-spacing:0; }
+
+/* ── 手紙（リード文） ─────────────────────────── */
+.letter__grid{ display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+.letter__inner{ max-width: var(--measure); }
+.letter__rail .eyebrow{ display: block; margin: 0; }
+.letter__rail .eyebrow::after{
+  display: block; content:""; width: 34px; height: 1px;
+  background: var(--rule-2); margin-top: .9rem; flex: none;
+}
+@media (min-width: 1000px){
+  .letter__grid{
+    grid-template-columns: 7.5rem minmax(0, var(--measure)) 7.5rem;
+    justify-content: center;
+    column-gap: clamp(1.6rem, 2.6vw, 2.6rem);
+  }
+  .letter__rail{ position: sticky; top: 3.2rem; align-self: start; }
+}
+.letter p{ font-size: 1.03rem; }
+.blk + .blk{ margin-top: 2.5rem; }
+.blk > p:last-child{ margin-bottom: 0; }
+
+/* 主催者アイコン（Discordのアイコン） */
+.avatar{
+  float: right; width: clamp(112px, 26%, 156px);
+  margin: .2rem 0 1.1rem 1.7rem;
+  text-align: center;
+  transform: rotate(-3.5deg);
+}
+.avatar img{
+  display: block; width: 100%; height: auto;
+  filter: drop-shadow(0 8px 12px rgba(23,32,43,.22));
+}
+.avatar figcaption{
+  font-family: var(--font-util); font-weight: 600;
+  font-size: .78rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-3); margin-top: .35rem;
+}
+@media (max-width: 560px){
+  .avatar{ width: 96px; margin-left: 1.2rem; }
+}
+.letter h2{
+  margin-top: clamp(3.2rem, 6vw, 4.4rem);
+  padding-top: 2.1rem;
+  border-top: 1px solid var(--rule);
+}
+.letter h2:first-of-type{ margin-top: clamp(2.6rem,5vw,3.6rem); }
+
+figure{ margin: 0; }
+.fig{ margin: clamp(2.6rem,5vw,3.4rem) 0; }
+.fig img{
+  display:block; width:100%; height:auto;
+  border: 1px solid var(--rule);
+}
+.fig figcaption{
+  font-family: var(--font-util); font-weight:500; font-size:.78rem;
+  letter-spacing:.16em; color: var(--ink-3); margin-top:.7rem;
+}
+
+/* ── 1日の流れ ───────────────────────────────── */
+.flow__head{ max-width: 46rem; }
+.flow__head p{ font-size: 1.02rem; max-width: var(--measure); }
+
+.phase{
+  display: grid; grid-template-columns: 1fr; gap: clamp(1.5rem,3vw,2.6rem);
+  align-items: center;
+  padding: clamp(2.4rem,4.5vw,3.4rem) 0;
+  border-top: 1px solid var(--rule);
+}
+@media (min-width: 860px){
+  .phase{ grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); }
+  .phase--flip .phase__media{ order: -1; }
+}
+.phase__no{
+  display:flex; align-items: baseline; gap: .9rem; margin-bottom: 1rem;
+}
+.phase__no b{
+  font-family: var(--font-util); font-weight:600; font-size: 2.6rem;
+  line-height:1; color: var(--accent); letter-spacing: .02em;
+}
+.phase__no span{
+  font-family: var(--font-util); font-weight:600; font-size:.82rem;
+  letter-spacing:.3em; text-transform: uppercase; color: var(--ink-2);
+}
+.phase__min{
+  margin-left:auto; font-family: var(--font-util); font-weight:600;
+  font-size:.85rem; letter-spacing:.14em; color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.phase h3{ margin-bottom: 1rem; font-size: 1.22rem; }
+.phase p{ font-size: .98rem; margin-bottom: 1em; }
+.phase p:last-child{ margin-bottom:0; }
+.phase__media img{
+  display:block; width:100%; height: clamp(220px, 30vw, 330px);
+  object-fit: cover; border: 1px solid var(--rule);
+}
+
+/* タイムテーブル */
+.tt{ margin-top: clamp(3rem,6vw,4.5rem); }
+.tt__wrap{ overflow-x: auto; }
+.tt table{
+  width:100%; border-collapse: collapse; min-width: 480px;
+  font-family: var(--font-display);
+}
+.tt th, .tt td{ text-align:left; padding: .9rem 1rem; border-bottom: 1px solid var(--rule); }
+.tt thead th{
+  font-family: var(--font-util); font-weight:600; font-size:.74rem;
+  letter-spacing:.24em; text-transform: uppercase; color: var(--ink-3);
+  border-bottom: 1px solid var(--rule-2); padding-bottom:.6rem;
+}
+.tt .t{
+  font-family: var(--font-util); font-weight:600; font-size: 1.22rem;
+  letter-spacing:.04em; color: var(--ink-2); width: 6.5rem; white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.tt td:last-child{ font-weight:500; font-size:.96rem; letter-spacing:.01em; }
+.tt tr.is-key .t{ color: var(--accent-dp); }
+.tt tr.is-key td:last-child{ font-weight:700; }
+.tt tbody tr{ transition: background-color .25s ease; }
+.tt tbody tr:hover{ background: rgba(255,255,255,.55); }
+.tt__note{ margin-top: 1.6rem; max-width: var(--measure); font-size:.96rem; }
+
+/* ── 開催概要 ────────────────────────────────── */
+.outline__grid{
+  display:grid; grid-template-columns: 1fr; gap: clamp(2rem,4vw,3rem);
+}
+@media (min-width: 900px){ .outline__grid{ grid-template-columns: minmax(0,1fr) minmax(0,1fr); } }
+.spec{ width:100%; border-collapse: collapse; font-family: var(--font-display); }
+.spec th, .spec td{
+  text-align:left; padding: .85rem .2rem; border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.spec th{
+  font-family: var(--font-util); font-weight:600; font-size:.78rem;
+  letter-spacing:.2em; text-transform: uppercase; color: var(--ink-3);
+  width: 7.5rem; padding-top: 1.15rem; white-space: nowrap;
+}
+.spec td{ font-weight:500; font-size:.97rem; letter-spacing:.01em; line-height:1.85; }
+.spec .tbd{ color: var(--accent-dp); font-weight:700; }
+.notecard{
+  align-self: start;
+  background: var(--paper-card); border: 1px solid var(--rule);
+  padding: clamp(1.6rem,3vw,2.2rem);
+}
+.notecard h3{ margin-bottom: 1rem; }
+.notecard p{ font-size:.97rem; }
+.notecard p:last-child{ margin-bottom:0; }
+
+/* ── FAQ ─────────────────────────────────────── */
+.faq{ max-width: 46rem; }
+.qa{ border-bottom: 1px solid var(--rule); }
+.qa summary{
+  list-style:none; cursor:pointer; padding: 1.3rem 2.4rem 1.3rem 2.1rem;
+  position: relative;
+  font-family: var(--font-display); font-weight:700; font-size:1.02rem;
+  line-height:1.75; letter-spacing:.01em;
+  transition: color .2s ease;
+}
+.qa summary::-webkit-details-marker{ display:none; }
+.qa summary:hover{ color: var(--accent-dp); }
+.qa summary::before{
+  content:"Q"; position:absolute; left:0; top:1.35rem;
+  font-family: var(--font-util); font-weight:600; font-size:1rem;
+  color: var(--accent); letter-spacing:.05em;
+}
+.qa summary::after{
+  content:""; position:absolute; right:.5rem; top:2.05rem;
+  width:11px; height:11px; border-right:1.5px solid var(--ink-3); border-bottom:1.5px solid var(--ink-3);
+  transform: rotate(45deg); transition: transform .3s ease;
+}
+.qa[open] summary::after{ transform: rotate(-135deg); }
+.qa__a{ padding: 0 1rem 1.6rem 2.1rem; }
+.qa__a p{ margin:0; font-size:.99rem; }
+.qa summary:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ── 夕景 → CTA ──────────────────────────────── */
+.dusk-photo{ display:block; width:100%; }
+.dusk-photo img{
+  display:block; width:100%; height: clamp(280px, 40vw, 480px);
+  object-fit: cover; object-position: center 55%;
+}
+.cta{
+  background: var(--dusk); color: var(--dusk-ink);
+  padding: clamp(4.5rem, 9vw, 7rem) 0 clamp(3rem,5vw,4rem);
+  position: relative; overflow: hidden;
+}
+.cta::before{
+  content:""; position:absolute; left:50%; top:-42%;
+  width: 120vw; height: 90vh; transform: translateX(-50%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(200,64,42,.30), rgba(200,64,42,0) 62%);
+  pointer-events:none;
+}
+.cta__inner{ position:relative; max-width: 44rem; }
+.cta .eyebrow{ color: var(--dusk-ink-2); }
+.cta .eyebrow::after{ background: rgba(239,232,219,.2); }
+.cta h2{ color: var(--dusk-ink); font-size: clamp(1.6rem,4vw,2.5rem); }
+.cta p{ color: var(--dusk-ink-2); font-size:1.01rem; }
+.btn{
+  display:inline-flex; align-items:center; gap:.9rem;
+  margin-top: 1.4rem;
+  font-family: var(--font-display); font-weight:900; font-size:1.04rem;
+  letter-spacing:.06em;
+  padding: 1.15rem 2.3rem;
+  background: var(--accent); color: #FFF8F3; text-decoration:none;
+  border: 1px solid var(--accent);
+  transition: background-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.btn:hover{ background: var(--accent-dp); transform: translateY(-2px); box-shadow: 0 16px 30px -18px rgba(200,64,42,.9); }
+.btn:focus-visible{ outline: 2px solid #FFF8F3; outline-offset: 3px; }
+.btn span{ font-family: var(--font-util); font-weight:600; letter-spacing:.2em; font-size:.8rem; opacity:.85; }
+.cta__note{
+  margin-top: 1.9rem; font-size:.92rem; color: var(--dusk-ink-2);
+  border-left: 1px solid rgba(239,232,219,.22); padding-left: 1.1rem;
+}
+
+footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp(3rem,5vw,4rem); }
+.foot{
+  border-top: 1px solid rgba(239,232,219,.14);
+  padding-top: 2rem;
+  display:flex; flex-wrap:wrap; gap: 1rem 2.5rem; justify-content: space-between;
+  font-family: var(--font-util); font-weight:500; font-size:.8rem; letter-spacing:.14em;
+}
+.foot p{ margin:0; }
+
+/* ── 出現アニメーション ─────────────────────── */
+.rise{ opacity:0; transform: translateY(22px); }
+.rise.is-in{ opacity:1; transform:none; transition: opacity .95s cubic-bezier(.2,.7,.25,1), transform .95s cubic-bezier(.2,.7,.25,1); }
+
+.hero .rise{ opacity:0; transform: translateY(26px); animation: rise-in 1.05s cubic-bezier(.2,.7,.25,1) forwards; }
+.hero .d1{ animation-delay:.05s } .hero .d2{ animation-delay:.22s }
+.hero .d3{ animation-delay:.39s } .hero .d4{ animation-delay:.56s }
+.hero .d5{ animation-delay:.73s } .hero .d6{ animation-delay:.9s }
+@keyframes rise-in{ to{ opacity:1; transform:none; } }
+
+.dv-path{ stroke-dasharray: 900; stroke-dashoffset: 900; }
+.is-drawn .dv-path{ animation: draw 1.7s cubic-bezier(.3,.7,.2,1) forwards; }
+.is-drawn .dv-path:nth-child(2){ animation-delay:.08s }
+.is-drawn .dv-path:nth-child(3){ animation-delay:.16s }
+.is-drawn .dv-path:nth-child(4){ animation-delay:.24s }
+.is-drawn .dv-path:nth-child(5){ animation-delay:.32s }
+@keyframes draw{ to{ stroke-dashoffset: 0; } }
+.dv-node{ opacity:0; }
+.is-drawn .dv-node{ animation: pop .5s ease forwards 1.5s; }
+.is-drawn .dv-node.is-hot{ animation-delay: 1.6s; }
+@keyframes pop{ to{ opacity:.45; } }
+.is-drawn .dv-node.is-hot{ animation-name: pop-hot; }
+@keyframes pop-hot{ to{ opacity:1; } }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .rise, .hero .rise{ opacity:1 !important; transform:none !important; animation:none !important; }
+  .dv-path{ stroke-dashoffset:0 !important; animation:none !important; }
+  .dv-node{ opacity:.45 !important; animation:none !important; }
+  .dv-node.is-hot{ opacity:1 !important; }
+  .btn, .tt tbody tr, .qa summary::after{ transition:none !important; }
+}
+</style>
+
+<noscript><style>.rise{opacity:1 !important; transform:none !important;}</style></noscript>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="rail" aria-hidden="true">
+  <div class="rail__line"></div>
+  <div class="rail__mark" id="railMark">
+    <span class="rail__dot"></span>
+    <span class="rail__now" id="railNow">10:00</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ══════════ ヒーロー ══════════ -->
+  <header class="hero">
+    <div class="shell">
+      <div class="hero__brand rise d1">
+        <span>AIMARK</span><em>実践者のコミュニティ／会員73名</em>
+      </div>
+
+      <div class="hero__grid">
+        <div>
+          <p class="lead1 rise d2">
+            <span class="job">広告の人</span>、<span class="job">SEOの人</span>、<span class="job">ECの人</span>…<br>
+            全く違うマーケター同士でチームを組むと、<br>
+            1人では絶対に浮かばないアイデアが形になる。
+          </p>
+
+          <h1 class="title rise d3">
+            <span class="sell">売れる</span>アプリ開発
+            <span class="small">1DAYチャレンジ会</span>
+          </h1>
+
+          <p class="lead3 rise d4">
+            イベントが終わる頃、きっと<br>
+            新しいAIの使い方を、隣の人から持ち帰ってます
+          </p>
+        </div>
+
+        <div class="diverge rise d5" id="diverge">
+          <svg viewBox="0 0 420 250" role="img" aria-label="朝、全チームに出される同じお題が、夕方には5つの別々のサービスに分かれる図">
+            <g>
+              <path class="dv-path" d="M20,125 C150,125 190,25 400,25"/>
+              <path class="dv-path" d="M20,125 C150,125 190,75 400,75"/>
+              <path class="dv-path is-hot" d="M20,125 C150,125 190,125 400,125"/>
+              <path class="dv-path" d="M20,125 C150,125 190,175 400,175"/>
+              <path class="dv-path" d="M20,125 C150,125 190,225 400,225"/>
+            </g>
+            <circle class="dv-seed" cx="20" cy="125" r="5.5"/>
+            <circle class="dv-node" cx="400" cy="25" r="4.5"/>
+            <circle class="dv-node" cx="400" cy="75" r="4.5"/>
+            <circle class="dv-node is-hot" cx="400" cy="125" r="4.5"/>
+            <circle class="dv-node" cx="400" cy="175" r="4.5"/>
+            <circle class="dv-node" cx="400" cy="225" r="4.5"/>
+          </svg>
+          <div class="diverge__cap">
+            <span>10:15 — 同じお題</span>
+            <span>16:15 — 5つの別物</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__photo rise d6">
+      <img src="./assets/01_hero_morning.jpg" alt="窓際の大きな木のテーブルを4人で囲み、1台のノートPCを一緒にのぞき込んで笑っている様子">
+    </div>
+
+    <div class="shell">
+      <dl class="factstrip rise d6">
+        <div class="fact"><dt>Date</dt><dd>9月後半<small>を予定</small></dd></div>
+        <div class="fact"><dt>Time</dt><dd>10:00–17:00<small>受付 10:00〜</small></dd></div>
+        <div class="fact"><dt>Place</dt><dd>調整中<small>オフライン開催</small></dd></div>
+        <div class="fact"><dt>Seats</dt><dd>参加者15名<small>3〜4名のチーム制</small></dd></div>
+        <div class="fact"><dt>Fee</dt><dd>調整中<small>会場費の確定後に</small></dd></div>
+        <div class="fact"><dt>Bring</dt><dd>ノートPC<small>環境は事前案内</small></dd></div>
+        <div class="fact"><dt>Level</dt><dd>開発経験 不問<small>チーム開発も未経験可</small></dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <!-- ══════════ 手紙（リード文） ══════════ -->
+  <section class="band letter">
+    <div class="shell">
+      <div class="letter__grid">
+      <div class="letter__rail"><p class="eyebrow rise">Letter</p></div>
+      <div class="letter__inner">
+
+        <div class="blk rise">
+          <p>あの人の使い方を、もう少し近くで見たいと思ったことはありませんか。</p>
+          <p>AIとの試行錯誤って、結局いつも一人なんですよね。私もそうでした。</p>
+
+          <figure class="avatar">
+            <img src="./assets/07_kai.webp" alt="主催者・かいのDiscordアイコン。丸眼鏡にスーツ姿のキャラクターが手を振っているイラスト">
+            <figcaption>かい</figcaption>
+          </figure>
+
+          <p>こんにちは、かいです。AIMARKのメンバーですが、今回はイベントの主催者をさせていただきました！</p>
+          <p>このイベントは、<strong>僕自身がAIMARKに感じている価値を、1日にギュッと凝縮して提供することを意図して設計しました。</strong></p>
+          <p>その価値とは一体何か？それは、<strong>「みんなで楽しみながら、AIスキルが上達する」</strong>です。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>僕がAIMARKに入ったばかりの頃、AIエージェント触りたてだったんですね。</p>
+          <p>MCP、サブエージェント、CLAUDE.md、自己改善ループ、、、こういったものを見聞きはしてたけど、何をどう手をつけたらいいのかさっぱり分からずにいました。</p>
+          <p>それが今では、細かな業務の自動化が徐々に進んでいき、</p>
+          <p>AIが質の高いアウトプットをポン出しするためのノウハウも、以前よりだいぶ蓄積されてきました。</p>
+          <p>我ながら、かなり良い感じの成長スピードでAI力が上達しているなと実感しています。</p>
+          <p>AIMARKがなかったら、間違いなく同じだけの成長は得られませんでした。</p>
+        </div>
+
+        <h2 class="rise">なぜ、いい使い方を見ても、<br>自分のものにならないのか</h2>
+
+        <div class="blk rise">
+          <p>これはAIあるあるだと思うんですが、AIって有象無象の情報が大量に流れますよね。</p>
+          <p>YouTubeの解説動画、Xのポスト、Udemyの講座、書籍、、、</p>
+          <p>僕は、1年前も、今も、同じぐらい情報をウォッチしています。</p>
+          <p>でも1人でやっていた頃、「結局何が正しいの？」「本当はみんなどこで課題に躓いて、どうやって解決していくの？」</p>
+          <p>っていう、AI驚き屋やポジショントーク成分強めのAI情報商材屋、AIコンサルタントの情報が多くて、まずどの情報を当てにしていいのかさっぱりわかりませんでした。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>でもAIMARKのもくもく会（あ、今は「みんなでお題やろう会」でしたね）に毎回参加し、オフラインのイベントにも全部出席している、AIMARKイチの暇人だからこそ実感していることがあるんですね。</p>
+          <p>ここで得られる情報は何が違うかというと、実務で実際にどうAIを使っているか、</p>
+          <p>同じ熱量で試行錯誤している人たちから、直接AIの使い方を聞くことができるということです。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>これを今まで、お題やろう会やオフライン会で、色んな人の話を聞く中で「Aさんはスキルをこういうふうに使ってた」「BさんはこのMCPを入れて、こういうふうに業務を回してたな」「Cさんはサブエージェントをこういう指示の出し方してたな」といった、</p>
+          <p>ネットには全くない、<strong>血肉の通ったAI活用法の引き出しが、ちょっとずつ自分の中に蓄積されていく</strong>んですね。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>で、自分もAIを使っていく中で、当然「全然うまくいかないー！」という時があるわけです。</p>
+          <p>そんな時に、「あ、そういえばCさんがこういうふうにサブエージェントに指示してたな」と思い出し、「この活用法なら解決するんじゃね…？」と、新しい方法を試すことができるんですね。</p>
+          <p>これが僕のAI力を底上げしてる、大きな要因になってるんですね。</p>
+          <p>つまり、AIMARKを通じて集めた引き出しから、色んな打ち手を試せる。そして今のAIは賢いから、こちらから提案したものをいい感じに仕組みとして落とし込んでくれます。</p>
+          <p>大事なのは、AIに対して壁を感じた時、解決するのは<span class="mk">「どれだけ引き出しを持っているか」</span>なんですね。</p>
+          <p><strong>だから僕にとって、誇張でもなんでもなく、AIMARKで自然と集まった引き出しが、ブレイクスルーのきっかけとなっていったのです。</strong></p>
+        </div>
+
+        <h2 class="rise">聞く相手はいる。<br>問題は、聞きに行く時間のほうでした</h2>
+
+        <div class="blk rise">
+          <p>すみません、ちょっとだけ今から、皆勤賞マウントを取りますw</p>
+          <p>正直僕としては、AIMARKに関われば関わるほど、活きた引き出しが蓄積されていくからこそ、</p>
+          <p>「もっと皆さんも活用したらいいのに…」と、“勿体無い”と思ったりする時があるんですよね。</p>
+          <p>というのも、これだけ僕がAIMARKから色々と吸収できたのは、毎回欠かさず木曜は出席し、オフラインのイベントにも全部出席してこれたからに尽きるんですよね。（皆勤賞マウント）</p>
+        </div>
+
+        <div class="blk rise">
+          <p>例えば木曜の「みんなでお題やろう会」でも、とよくらさんやあやみさんが、プロンプトの入れ方を見せてくれたり、</p>
+          <p>実はXでも発信されてない、「こんなスキル便利だよ〜」とか「こんなMCP入れると楽になるよ〜」とか、教わったことがたくさんあって、この時間は結構引き出しが溜まっているんですよね。（あと単純に、チャットでワイワイできて楽しいですw）</p>
+          <p>Discordも、皆さん本当に親切なので、返信をすればすごく丁寧に色々と教えてくれます。</p>
+          <p>みんなでお酒を飲んだら、色んな人が本当に全然違うAIの使い方をしているので、さまざまな話が聞けて本当に面白いんですよね。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>とはいえ、「だからもっと発言すればいいじゃん！」とならない気持ちも、十分にわかります。</p>
+          <p>そもそも僕自身、実はだいぶ人見知りが強いので、Discordには「🙋‍♂️聞いていい？」がありますが、あそこで質問するの、ちょっとハードル高いですよね。</p>
+          <p>ちょっと時間が空いちゃうと、独り言で呟くのも、なんとなくハードルが上がってしまうし、</p>
+          <p>毎週木曜日の夜に毎回参加するのも、仕事が忙しかったり、ご家庭をお持ちの方なんかは、<strong>本当に時間の確保がキツイ</strong>と思います。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>だからこそ！！！</p>
+          <p><strong>僕が今までAIMARKで感じてきた価値が、全部まるっと手に入る1日を作りたい！</strong></p>
+          <p>そういう個人的な思いで、とよくらさんとあやみさんにサポートいただきながら、かおりさんやしいなさんと一緒にイベントの企画を練ってきたんですね。</p>
+        </div>
+
+        <h2 class="rise">なぜアプリ開発会なのか？</h2>
+
+        <div class="blk rise">
+          <p>では、一体なぜアプリ開発をやることになったのか？</p>
+          <p>それは、AIを使う瞬間の、プロンプトの指示の出し方、物事を考える時の視点、考えたこともないようなAIの使い方、、、</p>
+          <p>こういう実務で発生する生のAI活用法って、<strong>会話の中で引き出すのってかなり難易度高くないですか？</strong></p>
+          <p>僕の場合は皆勤賞なので（暇人なので）色んな方と楽しく交流できたから、ちょっとずつ引き出しを作れただけで、</p>
+          <p>1日で狙って引き出してください！と言われても、まぁ難しいですよね。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>だから、<span class="mk">「チームを組んで、一緒にちょっとムズい課題に取り組む」</span>これが重要なんですね。</p>
+          <p>最後に、優勝チームを決める投票も行うので、ぜひ皆さん優勝に向けて頑張っていただきたいのですが、</p>
+          <p>ちょっとガチになってチームで取り組んで行ったら、色んな意見を出し合ったり、実際にAIをどう使って、どんなアプリを設計するかを議論しますよね。</p>
+          <p>この形を作っていく過程の中に、<strong>1人1人が持つ引き出しが次々と出てくる</strong>と思うんですよ。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>だから、<strong>あえて僕らの専門外であるアプリ開発に、みんなで全力で取り掛かる。</strong></p>
+          <p>しかも、売り方まで自分たちで考える。</p>
+          <p>これをAIMARKのメンバーでやったら、<strong>絶対にすごい1日になるな</strong>と思ったんです。</p>
+          <p>きっとイベントでは、1人では絶対に浮かばないアイデアが形になっていきますよ。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>AIMARKには、SEOの人、広告の人、販売特化の人、全く違うタイプのマーケターがいます。</p>
+          <p>そんな、全然違うマーケター同士で意見を出し合い、AIの使い方を教えあったりしたら、<strong class="ac">1日で相当引き出しが増えると思いませんか？</strong></p>
+          <p>そして、共にアプリを作ったチームメイトは、その夜からAI友達になって、翌日からDiscordで一緒にワイワイできるようになります。</p>
+          <p>（大人になると、共通の趣味の友達を作れる場があるって、本当に貴重だなと実感します。）</p>
+        </div>
+
+        <h2 class="rise">コードは、書けなくて大丈夫です</h2>
+
+        <div class="blk rise">
+          <p>アプリ開発がテーマと聞いて、身構えた方もいるかもしれません。</p>
+          <p>もちろん、開発経験は不問です。（というか僕自身も、開発経験なんて全くありません）</p>
+          <p>当日は、AIに強い人も、そこまで強くない人も一緒にワイワイしたいと思っています。</p>
+          <p>開発経験は問いません。<strong>手を動かすのはAIです。</strong></p>
+          <p>できたものを決めるのも、参加者全員の投票です。軸は「自分が使いたい」「売れそうだと思った」サービス。だから、技術力の高さを競う場ではありません。</p>
+          <p>万が一、技術面で躓いてしまった場合も、とよくらさんやあやみさんが全力で助けてくれます。</p>
+        </div>
+
+        <figure class="fig rise">
+          <img src="./assets/06_support.jpg" alt="テーブルの脇にしゃがんだ技術サポーターが、座っている2人にノートPCの画面を指しながら説明している様子">
+          <figcaption>詰まったら手を挙げてください。技術サポーターが各チームを巡回します。</figcaption>
+        </figure>
+
+        <div class="blk rise">
+          <p>だから、<strong>「AI好きな人たちとワイワイしながら、普段見ないAIの使い方を知りたい」</strong>という方は、ぜひ参加して欲しいです。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>ただ、会場の関係上、<strong class="ac">参加枠は15名限定</strong>となってしまいました。</p>
+          <p>もしピンと来たなら、ぜひ奮ってご参加ください！</p>
+          <p>ぜひ一緒に、<strong class="ac">AI友達</strong>作って、いっぱいAI活用法を発見できる、とっても充実した1日にしていきましょう😆</p>
+        </div>
+
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 1日の流れ ══════════ -->
+  <section class="band" id="schedule">
+    <div class="shell">
+      <p class="eyebrow rise">Schedule</p>
+
+      <div class="flow__head rise">
+        <h2>同じお題から始めて、<br>夕方には全チームが発表します</h2>
+        <p>朝、全チームに同じお題が出ます。</p>
+        <p>そこから3〜4名のチームで、「誰の、どんな場面の、何を解決するサービスにするか」を決めて、AIで形にして、売り方まで考えます。</p>
+        <p>夕方には、同じお題から始めたはずの5チームが、全く違うサービスを持って並びます。それを全員で見る日です。</p>
+      </div>
+
+      <div class="phase rise">
+        <div>
+          <div class="phase__no">
+            <b>01</b><span>Find</span><span class="phase__min">90 min</span>
+          </div>
+          <h3>誰なら欲しいか、を見つける</h3>
+          <p>ターゲット、用途、利用シーン。切り口を変えながら、チームでお題を再解釈します。</p>
+          <p>ゴールは、「誰の、どんな場面の、何を解決するサービスか」が1行で言えること。ここが、マーケターの本業がいちばん効くところです。</p>
+        </div>
+        <div class="phase__media">
+          <img src="./assets/02_find.jpg" alt="木のテーブルいっぱいに色とりどりの付箋を広げ、数人の手が書き込んだり並べ替えたりしている様子">
+        </div>
+      </div>
+
+      <div class="phase phase--flip rise">
+        <div>
+          <div class="phase__no">
+            <b>02</b><span>Make</span><span class="phase__min">150 min</span>
+          </div>
+          <h3>AIで形にする</h3>
+          <p>見つけた価値を、AIでアプリの最小版にしていきます。</p>
+          <p>完成品でなくて大丈夫です。まず、触れるところまで。詰まったら手を挙げてください。技術サポーターが入ります。</p>
+        </div>
+        <div class="phase__media">
+          <img src="./assets/03_make.jpg" alt="ノートPCの画面を指さしながら話す人と、その隣で自分のPCに打ち込む人">
+        </div>
+      </div>
+
+      <div class="phase rise">
+        <div>
+          <div class="phase__no">
+            <b>03</b><span>Sell &amp; Pitch</span><span class="phase__min">45 min</span>
+          </div>
+          <h3>売り方を決めて、発表する</h3>
+          <p>誰に売るか。何を価値として伝えるか。サービス名とキャッチコピーまで作って、3分の発表に仕立てます。</p>
+          <p>最後は全員の投票です。軸は「自分が使いたい」「売れそうだと思った」サービス。技術力の高さを競う場ではありません。</p>
+        </div>
+        <div class="phase__media">
+          <img src="./assets/04_pitch.jpg" alt="明るい部屋の前方に立って発表する人と、それを見上げて聞いている参加者たち">
+        </div>
+      </div>
+
+      <div class="tt rise">
+        <div class="tt__wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Time</th><th scope="col">Programme</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="t">10:00</td><td>受付・開場</td></tr>
+              <tr class="is-key"><td class="t">10:15</td><td>オープニング（お題発表・チーム発表）</td></tr>
+              <tr><td class="t">10:35</td><td>チーム内アイスブレイク（自己紹介から始めます）</td></tr>
+              <tr class="is-key"><td class="t">10:50</td><td>① FIND｜価値を見つける</td></tr>
+              <tr><td class="t">12:20</td><td>中間共有・昼休憩</td></tr>
+              <tr class="is-key"><td class="t">13:00</td><td>② MAKE｜AIで形にする（途中休憩あり）</td></tr>
+              <tr class="is-key"><td class="t">15:30</td><td>③ SELL &amp; PITCH｜売り方とプレゼンをつくる</td></tr>
+              <tr><td class="t">16:15</td><td>発表（1チーム3分）</td></tr>
+              <tr><td class="t">16:40</td><td>全員投票</td></tr>
+              <tr><td class="t">16:50</td><td>表彰・クロージング</td></tr>
+              <tr><td class="t">17:00</td><td>終了（希望者で懇親へ）</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tt__note">
+          <p>時間は目安です。正直に書くと、運営も全員、この形式のイベントは初めてです。だから細かい手順書は用意せず、チームの判断で前後させてもらう進行にしています。</p>
+          <p>代わりに、お昼の中間共有で各チームが「うちはこの方向で行きます」を1分ずつ話します。他のチームの切り口が耳に入るのは、ここが最初です。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 開催概要 ══════════ -->
+  <section class="band" id="outline">
+    <div class="shell">
+      <p class="eyebrow rise">Outline</p>
+      <h2 class="rise">開催概要</h2>
+
+      <div class="outline__grid">
+        <div class="rise">
+          <table class="spec">
+            <tbody>
+              <tr><th scope="row">日程</th><td>2026年9月後半を予定<br>（会場の確定後、正式にご案内します）</td></tr>
+              <tr><th scope="row">時間</th><td>10:00〜17:00<br>（受付 10:00〜／終了後、希望者で懇親）</td></tr>
+              <tr><th scope="row">形式</th><td>オフライン開催</td></tr>
+              <tr><th scope="row">会場</th><td><span class="tbd">調整中</span>（確定次第、このページでご案内します）</td></tr>
+              <tr><th scope="row">定員</th><td>参加者15名（3〜4名ずつのチームに分かれます）</td></tr>
+              <tr><th scope="row">参加費</th><td><span class="tbd">調整中</span>（会場費の確定後にご案内します）</td></tr>
+              <tr><th scope="row">持ち物</th><td>ノートPC（必要な環境は、参加確定後に事前にご案内します）</td></tr>
+              <tr><th scope="row">参加条件</th><td>開発経験・チーム開発の経験は問いません</td></tr>
+              <tr><th scope="row">サポート</th><td>技術サポーターが各チームを巡回します</td></tr>
+              <tr><th scope="row">主催</th><td>AIMARK運営委員会</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="notecard rise">
+          <h3>チーム分けについて</h3>
+          <p>チームは運営が組みます。仕事のジャンルや、普段使っているAIが散らばるように分けます。</p>
+          <p>会場と参加費は、決まり次第このページを更新します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ FAQ ══════════ -->
+  <section class="band" id="faq">
+    <div class="shell">
+      <p class="eyebrow rise">Questions</p>
+      <h2 class="rise">よくある質問</h2>
+
+      <div class="faq rise">
+        <details class="qa">
+          <summary>開発経験がまったくありません。参加できますか？</summary>
+          <div class="qa__a"><p>参加できます。というより、開発経験ゼロを前提に設計しています。手を動かすのはAIで、技術サポーターが各チームを巡回します。必要なのは、コードを書く力より「誰が欲しがるか」を考える力のほうです。</p></div>
+        </details>
+        <details class="qa">
+          <summary>AIにそこまで詳しくありません。チームの足を引っ張りませんか？</summary>
+          <div class="qa__a"><p>当日は、AIに強い人も、そこまで強くない人も混ざります。広告の人とECの人では「誰が欲しがるか」の答えが違う。毎日見ているものが違うこと自体が、この日の材料です。詳しさより、あなたの職種の視点を持ってきてください。</p></div>
+        </details>
+        <details class="qa">
+          <summary>初対面の人とチームを組むのが不安です。</summary>
+          <div class="qa__a"><p>最初の15分は、自己紹介とアイスブレイクから始めます。1チーム3〜4名の少人数で、全員に発言の機会が回る進行にしています。</p></div>
+        </details>
+        <details class="qa">
+          <summary>いいアイデアが浮かばない気がします。</summary>
+          <div class="qa__a"><p>筋の悪いアイデアほど歓迎です。FINDの前半は「NGなし・数優先」で、思いついた案を全部書き出すルールにしています。運営が先に、いちばん売れなさそうな案を出します。</p></div>
+        </details>
+        <details class="qa">
+          <summary>途中で手が止まったら、どうすればいいですか？</summary>
+          <div class="qa__a"><p>手を挙げてください。技術サポーターか運営が入ります。必要なら、他のチームも含めて全員で考えます。詰まったチームを放っておかない進行にしています。</p></div>
+        </details>
+        <details class="qa">
+          <summary>お題は事前に分かりますか？</summary>
+          <div class="qa__a"><p>当日の朝に発表します。事前に決めすぎると、当日の面白さが削れるからです。代わりに、参加確定後のアンケートで「AIで作ってみたいもの」を聞きます。お題の範囲は、その回答を見て決めます。</p></div>
+        </details>
+        <details class="qa">
+          <summary>完成しなかったら、どうなりますか？</summary>
+          <div class="qa__a"><p>完成度は問いません。まず「触れる」ところまでを目指します。投票の軸も「自分が使いたい」「売れそうだと思った」サービスで、技術力の高さを競う場ではありません。</p></div>
+        </details>
+        <details class="qa">
+          <summary>終了後の予定はありますか？</summary>
+          <div class="qa__a"><p>17時に終了します。そのあと、希望者で懇親の場を予定しています。こちらは自由参加です。</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 夕景 → 申込 ══════════ -->
+  <div class="dusk-photo">
+    <img src="./assets/05_evening.jpg" alt="夕方の光が差し込む部屋で、参加者たちが紙コップを持って立ち話しながら笑っている様子">
+  </div>
+
+  <section class="cta" id="apply">
+    <div class="shell">
+      <div class="cta__inner">
+        <p class="eyebrow">Apply</p>
+        <h2>9月後半のどこか、<br>丸一日だけ空けておいてください。</h2>
+        <p>朝は、隣の人が何をやっている人かも知りません。夕方には、その人の手元を丸一日ぶん見終わっています。</p>
+        <!-- TODO: 申込フォームのURLに差し替える（会場・参加費の確定後） -->
+        <a class="btn" href="#apply">参加を申し込む <span>1DAY</span></a>
+        <p class="cta__note">申込の受付は、会場と参加費が決まってから開始します。決まり次第、このページとDiscordでお知らせします。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="shell">
+      <div class="foot">
+        <p>主催 — AIMARK運営委員会</p>
+        <p>売れるアプリ開発 1DAYチャレンジ会</p>
+        <p>※掲載内容は暫定です／画像はすべてイメージです</p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* 出現アニメーション */
+  var targets = Array.prototype.filter.call(
+    document.querySelectorAll(".rise"),
+    function(el){ return !el.closest(".hero"); }
+  );
+  if (reduce || !("IntersectionObserver" in window)) {
+    targets.forEach(function(el){ el.classList.add("is-in"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("is-in"); io.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.06 });
+    targets.forEach(function(el){ io.observe(el); });
+  }
+
+  /* 分岐図を描く */
+  var dv = document.getElementById("diverge");
+  if (dv){
+    if (reduce) { dv.classList.add("is-drawn"); }
+    else {
+      var io2 = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting){ e.target.classList.add("is-drawn"); io2.unobserve(e.target); }
+        });
+      }, { threshold: 0.35 });
+      io2.observe(dv);
+    }
+  }
+
+  /* 左端の時刻レール — スクロール位置を 10:00〜17:00 に写す */
+  var mark = document.getElementById("railMark");
+  var now  = document.getElementById("railNow");
+  var rail = document.querySelector(".rail");
+  if (mark && now && rail){
+    var ticking = false;
+    function paint(){
+      ticking = false;
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      var p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
+      var mins = 600 + p * 420;                       /* 10:00 → 17:00 */
+      var hh = Math.floor(mins / 60);
+      var mm = Math.floor(mins % 60 / 5) * 5;
+      now.textContent = hh + ":" + (mm < 10 ? "0" + mm : mm);
+      mark.style.transform = "translateY(" + (p * (rail.clientHeight - 19)) + "px)";
+    }
+    window.addEventListener("scroll", function(){
+      if (!ticking){ ticking = true; window.requestAnimationFrame(paint); }
+    }, { passive: true });
+    window.addEventListener("resize", paint);
+    paint();
+  }
+})();
+</script>
