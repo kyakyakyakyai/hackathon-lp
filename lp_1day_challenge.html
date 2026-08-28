@@ -1,4 +1,4 @@
-<title>売れるアプリ開発 1DAYチャレンジ会</title>
+<title>AIMARK 1DAYハッカソン｜AIMARKのみんなが、使いたくなるものをつくろう。</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap">
@@ -144,123 +144,258 @@ strong{ font-weight: 600; }
 section{ position: relative; }
 .band{ padding: clamp(3.8rem, 6.5vw, 5.8rem) 0; }
 
-/* ── ヒーロー ─────────────────────────────────── */
-.hero{ padding: clamp(3rem, 6vw, 5rem) 0 0; }
+/* ── ヒーロー（キービジュアル A.png に準拠） ─────────
+   AIMARKブランド配色：ネイビー／ティール／イエロー。
+   このヘッダーだけ独立した配色トークンを持つ。
+   ────────────────────────────────────────────── */
+.hero{
+  --navy:      #041F44;
+  --navy-2:    #2B4467;
+  --navy-3:    #5C7292;
+  --teal:      #0A96A2;
+  --teal-pale: #E2F1F1;
+  --teal-line: #8CC6CB;
+  --wave:      #C0DDDE;
+  --wave-2:    #DCECEC;
+  --yellow:    #FBC02D;
+  --blue:      #3D88C4;
+  --hero-bg:   #FCFCFC;
+  --hair:      #DCE7E9;
+  --gutter:    max(1.25rem, calc((100vw - var(--shell)) / 2));
+  --title:     clamp(1.22rem, 6.1vw, 4.15rem);
+  color: var(--navy);
+  padding: 0;
+}
+
+.hero__stage{
+  position: relative;
+  overflow: hidden;
+  background: var(--hero-bg);
+  padding: clamp(2rem, 4.4vw, 3.4rem) 0 clamp(3.6rem, 7vw, 6rem);
+}
+
+/* 背景のドットパターン */
+.hero__dots{
+  position: absolute; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(circle, var(--teal-line) 1.5px, transparent 1.6px);
+  background-size: 15px 15px;
+  opacity: .5;
+}
+.hero__dots--tr{
+  top: 1.5rem; right: 1.2rem; width: 122px; height: 104px;
+  -webkit-mask-image: radial-gradient(125% 125% at 100% 0, #000 38%, transparent 76%);
+          mask-image: radial-gradient(125% 125% at 100% 0, #000 38%, transparent 76%);
+}
+.hero__dots--bl{
+  bottom: 1.1rem; left: .9rem; width: 96px; height: 90px;
+  -webkit-mask-image: radial-gradient(125% 125% at 0 100%, #000 38%, transparent 76%);
+          mask-image: radial-gradient(125% 125% at 0 100%, #000 38%, transparent 76%);
+}
+@media (max-width: 660px){
+  .hero__dots--tr{ width: 74px; height: 64px; }
+  .hero__dots--bl{ display: none; }
+}
+
+.hero__copy{ position: relative; z-index: 2; }
+
+/* ロゴ ＋ イベント表記 */
 .hero__brand{
-  font-family: var(--font-util); font-weight: 600;
-  font-size: .78rem; letter-spacing: .4em; text-transform: uppercase;
-  color: var(--ink-2);
-  display: flex; align-items: center; gap: 1rem; margin-bottom: clamp(3rem,6vw,4.5rem);
+  display: flex; align-items: center; gap: clamp(.85rem, 2.1vw, 1.5rem);
+  margin: 0 0 clamp(1.5rem, 3.2vw, 2.4rem);
 }
-.hero__brand span::after{ content:""; }
-.hero__brand em{
-  font-style: normal; color: var(--ink-3); letter-spacing: .24em;
-  font-size: .72rem;
+.hero__logo{
+  display: block; flex: none;
+  width: clamp(56px, 7vw, 82px); height: auto;
 }
-.hero__brand::before{
-  content:""; width: 34px; height:1px; background: var(--rule-2);
+.hero__names{ margin: 0; font-family: var(--font-display); line-height: 1.55; }
+.hero__names b,
+.hero__names i{
+  display: block; font-style: normal; font-weight: 900;
+  font-size: clamp(.76rem, 1.5vw, 1.02rem); letter-spacing: .11em;
 }
+.hero__names b{ color: var(--navy); }
+.hero__names i{ color: var(--teal); }
 
-.hero__grid{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2.5rem, 5vw, 3.5rem);
-  align-items: end;
-}
-@media (min-width: 900px){
-  .hero__grid{ grid-template-columns: minmax(0,1fr) minmax(0,.72fr); }
-}
-
-/* 第1階層 */
-.lead1{
-  font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(1rem, 2.15vw, 1.28rem);
-  line-height: 2.15; letter-spacing: .04em; color: var(--ink-2);
-  margin: 0 0 clamp(1.6rem, 3vw, 2.2rem);
-}
-.job{
-  color: var(--accent-dp); font-weight: 900;
-  position: relative; white-space: nowrap;
-}
-
-/* 第2階層＝イベント名 */
+/* キャッチコピー */
 .title{
   font-family: var(--font-display); font-weight: 900;
-  font-size: clamp(2.65rem, 8.2vw, 5.15rem);
-  line-height: 1.13; letter-spacing: -.025em;
-  margin: 0 0 clamp(1.7rem, 3.4vw, 2.4rem);
+  font-size: var(--title);
+  line-height: 1.36; letter-spacing: -.02em;
+  color: var(--navy);
+  margin: 0;
 }
-.title .sell{ color: var(--accent); }
-.title .small{
-  display:block; font-size: .77em; letter-spacing: -.01em; margin-top: .12em;
-}
-
-/* 第3階層 */
-.lead3{
-  font-family: var(--font-body); font-weight: 400;
-  font-size: clamp(1rem, 2vw, 1.14rem);
-  line-height: 2.1; letter-spacing: .045em; color: var(--ink);
-  margin: 0; padding-left: 1.15rem;
-  border-left: 2px solid var(--accent);
+.title .t-line{ display: block; }
+.title .t-teal{ color: var(--teal); position: relative; }
+.title .t-teal::after{
+  content: ""; position: absolute;
+  left: -.05em; right: -1.35em; bottom: -.21em; height: .17em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 22' preserveAspectRatio='none'%3E%3Cpath d='M2,3 C90,12 210,12 298,1 L298,9 C210,20 90,20 2,11 Z' fill='%23FBC02D'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
 }
 
-/* 右カラム：一日の分岐図 */
-.diverge{ width: 100%; }
-.diverge svg{ width: 100%; height: auto; display: block; overflow: visible; }
-.diverge__cap{
-  display:flex; justify-content: space-between; gap: 1rem;
-  font-family: var(--font-util); font-weight:600; font-size:.76rem;
-  letter-spacing: .16em; color: var(--ink-3); margin-top: .9rem;
+/* コピー下段：左＝約束／右＝写真 */
+.hero__lower{
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: 1fr;
+  gap: clamp(2rem, 4vw, 2.6rem);
+  margin-top: clamp(1.6rem, 3.4vw, 2.4rem);
 }
-.dv-path{ fill:none; stroke: var(--ink); stroke-width: 1.25; opacity:.3; }
-.dv-path.is-hot{ stroke: var(--accent); opacity:.9; stroke-width: 1.75; }
-.dv-node{ fill: var(--ink); opacity:.45; }
-.dv-node.is-hot{ fill: var(--accent); opacity:1; }
-.dv-seed{ fill: var(--accent); }
+@media (min-width: 980px){
+  .hero__lower{
+    grid-template-columns: minmax(0,1fr) minmax(0,.84fr);
+    align-items: end;
+    gap: clamp(1.4rem, 3vw, 2.6rem);
+  }
+}
 
-/* ヒーロー写真帯 */
-.hero__photo{
-  margin-top: clamp(3.5rem, 7vw, 5.5rem);
-  position: relative; width: 100%;
+/* 3つの約束 */
+.promise{
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: clamp(.55rem, 1.7vw, 1.2rem);
 }
+.promise li{
+  display: flex; align-items: center; gap: .55rem;
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(.94rem, 1.8vw, 1.26rem);
+  letter-spacing: .01em; color: var(--navy);
+}
+.promise li + li{
+  padding-left: clamp(.55rem, 1.7vw, 1.2rem);
+  border-left: 1px solid var(--hair);
+}
+.chip{
+  width: clamp(30px, 3.5vw, 42px); height: clamp(30px, 3.5vw, 42px);
+  border-radius: 50%; flex: none;
+  display: grid; place-items: center;
+}
+.chip svg{ display: block; width: 62%; height: 62%; }
+.chip--check{ background: var(--teal-pale); }
+.chip--play { background: var(--yellow); }
+.chip--heart{ background: var(--blue); }
+
+/* 正解は、なんでもあり。 */
+.hero__note{
+  margin: clamp(1.3rem, 2.8vw, 2rem) 0 0;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.42rem);
+  letter-spacing: .07em; color: var(--navy);
+}
+.hero__note u{
+  text-decoration: none;
+  border-bottom: 2px solid var(--teal-line);
+  padding-bottom: .18em;
+}
+
+/* 一行説明 */
+.hero__lead{
+  margin: clamp(1rem, 2.2vw, 1.5rem) 0 0;
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(.92rem, 1.5vw, 1.06rem);
+  line-height: 2; letter-spacing: .035em; color: var(--navy-2);
+}
+
+/* 参加のかたち */
+.hero__specs{
+  list-style: none; margin: clamp(1.7rem, 3.4vw, 2.4rem) 0 0; padding: 0;
+  display: flex; flex-wrap: wrap;
+}
+.hero__specs li{
+  display: flex; flex-direction: column; align-items: center; gap: .5rem;
+  padding: 0 clamp(.9rem, 2.2vw, 1.8rem);
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(.72rem, 1.3vw, .88rem);
+  letter-spacing: .04em; color: var(--navy);
+}
+.hero__specs li:first-child{ padding-left: 0; }
+.hero__specs li + li{ border-left: 1px solid var(--hair); }
+.hero__specs svg{ display: block; width: clamp(24px, 2.8vw, 34px); height: auto; }
+
+/* 狭い画面：約束／参加のかたちを1行に収める */
+@media (max-width: 460px){
+  .promise{ gap: .35rem; row-gap: .6rem; }
+  .promise li{ font-size: .78rem; gap: .4rem; }
+  .promise li + li{ padding-left: .35rem; }
+  .chip{ width: 26px; height: 26px; }
+  .hero__specs li{ padding: 0 .75rem; font-size: .7rem; gap: .4rem; }
+  .hero__specs svg{ width: 22px; }
+}
+@media (max-width: 360px){
+  .promise li{ font-size: .72rem; }
+  .hero__specs li{ padding: 0 .6rem; font-size: .66rem; }
+  .hero__specs svg{ width: 20px; }
+}
+
+/* 写真 */
+.hero__photo{ position: relative; }
 .hero__photo img{
-  display:block; width:100%; height: clamp(300px, 46vw, 560px);
-  object-fit: cover; object-position: center 42%;
+  display: block; width: 100%;
+  height: clamp(200px, 44vw, 300px);
+  object-fit: cover; object-position: center 44%;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 15%);
+          mask-image: linear-gradient(180deg, transparent 0, #000 15%);
 }
-.hero__photo::after{
-  content:""; position:absolute; inset:0;
-  background: linear-gradient(180deg, rgba(231,237,239,.28) 0%, rgba(231,237,239,0) 22%, rgba(20,28,43,.06) 100%);
+.hero__photo{ margin-bottom: -2.6rem; }
+@media (min-width: 980px){
+  .hero__photo{
+    align-self: stretch;
+    min-height: clamp(290px, 27vw, 400px);
+    margin-right: calc(var(--gutter) * -1);
+    margin-bottom: calc(-1 * clamp(2.6rem, 5.4vw, 4.8rem));
+  }
+  .hero__photo img{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    -webkit-mask-image: linear-gradient(96deg, transparent 0, rgba(0,0,0,.42) 11%, #000 30%);
+            mask-image: linear-gradient(96deg, transparent 0, rgba(0,0,0,.42) 11%, #000 30%);
+  }
 }
+
+/* 波 */
+.hero__wave{
+  position: absolute; left: 0; right: 0; bottom: -1px; z-index: 3;
+  height: clamp(56px, 8.4vw, 122px); pointer-events: none;
+}
+.hero__wave svg{ display: block; width: 100%; height: 100%; }
 
 /* 情報帯（ヘッダー直下） */
+.hero__foot{
+  position: relative; z-index: 4;
+  background: linear-gradient(180deg, var(--wave) 0, var(--wave) 30%, rgba(192,221,222,0) 100%);
+  padding-bottom: clamp(1.4rem, 2.8vw, 2.4rem);
+}
 .factstrip{
   position: relative; z-index: 2;
-  margin-top: -2.6rem;
-  background: var(--paper-card);
-  border: 1px solid var(--rule);
-  box-shadow: 0 22px 44px -30px rgba(23,32,43,.55);
+  margin-top: -2.2rem;
+  background: #FFFFFF;
+  border: 1px solid #DEE9EA;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 22px 44px -30px rgba(4,31,68,.5);
   display: grid;
   grid-template-columns: repeat(2, minmax(0,1fr));
 }
 @media (min-width: 620px){ .factstrip{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
 @media (min-width: 1000px){ .factstrip{ grid-template-columns: repeat(7, minmax(0,1fr)); } }
 .fact{
-  padding: 1.15rem 1.15rem 1.25rem;
-  border-right: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
+  padding: 1.05rem 1.05rem 1.15rem;
+  border-right: 1px solid #E9F1F2;
+  border-bottom: 1px solid #E9F1F2;
 }
 .fact:last-child{ border-right: none; }
 @media (min-width: 1000px){ .fact{ border-bottom: none; } }
 .fact dt{
-  font-family: var(--font-util); font-weight:600; font-size:.72rem;
-  letter-spacing:.22em; text-transform: uppercase; color: var(--ink-3);
-  margin-bottom:.45rem;
+  font-family: var(--font-display); font-weight: 900; font-size: .68rem;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--teal);
+  margin-bottom: .42rem;
 }
 .fact dd{
-  margin:0; font-family: var(--font-display); font-weight:700;
-  font-size: .95rem; line-height:1.55; letter-spacing:.01em;
+  margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: .95rem; line-height: 1.55; letter-spacing: .01em; color: var(--navy);
 }
-.fact dd small{ display:block; font-weight:500; font-size:.78rem; color: var(--ink-2); letter-spacing:0; }
+.fact dd small{
+  display: block; margin-top: .12rem;
+  font-weight: 500; font-size: .76rem; color: var(--navy-3); letter-spacing: 0;
+}
 
 /* ── 手紙（リード文） ─────────────────────────── */
 .letter__grid{ display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
@@ -308,6 +443,22 @@ section{ position: relative; }
 }
 .letter h2:first-of-type{ margin-top: clamp(2.6rem,5vw,3.6rem); }
 
+/* 受けの見出し（「なぜなら…」）を直前の見出しに従属させる */
+.letter h2 + h2{
+  margin-top: -.7rem; padding-top: 0; border-top: none;
+  font-size: clamp(1.12rem, 2.4vw, 1.46rem);
+  color: var(--ink-2);
+}
+
+/* 本文中の箇条書き */
+.letter ul{ margin: 1.5rem 0; padding: 0; list-style: none; }
+.letter li{ position: relative; padding-left: 1.5rem; font-size: 1.03rem; }
+.letter li + li{ margin-top: .5rem; }
+.letter li::before{
+  content: ""; position: absolute; left: .25rem; top: .85em;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+}
+
 figure{ margin: 0; }
 .fig{ margin: clamp(2.6rem,5vw,3.4rem) 0; }
 .fig img{
@@ -320,6 +471,39 @@ figure{ margin: 0; }
 }
 
 /* ── 1日の流れ ───────────────────────────────── */
+/* ── 章の切り替え（手紙 → 当日の流れ） ─────────── */
+.chapter{ border-top: 1px solid var(--rule-2); }
+.chapter::before{
+  content: ""; position: absolute; left: 50%; top: 0;
+  width: 11px; height: 11px; margin: -6px 0 0 -5.5px;
+  background: var(--accent); transform: rotate(45deg);
+}
+.sechead{
+  text-align: center; max-width: 40rem;
+  margin: 0 auto clamp(2.8rem, 5vw, 3.8rem);
+}
+.sechead__en{
+  font-family: var(--font-util); font-weight: 600;
+  font-size: .8rem; letter-spacing: .34em; text-transform: uppercase;
+  color: var(--accent-dp); margin: 0 0 1rem;
+}
+.sechead__ja{
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(1.9rem, 4.6vw, 2.9rem);
+  line-height: 1.4; letter-spacing: .06em; margin: 0;
+}
+.sechead__ja::after{
+  content: ""; display: block;
+  width: 46px; height: 3px; margin: 1.15rem auto 0;
+  background: var(--accent);
+}
+
+.flow__lead{
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+  line-height: 1.55; letter-spacing: .005em;
+  text-wrap: balance; margin: 0 0 1.6rem;
+}
 .flow__head{ max-width: 46rem; }
 .flow__head p{ font-size: 1.02rem; max-width: var(--measure); }
 
@@ -494,26 +678,9 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
 .hero .d5{ animation-delay:.73s } .hero .d6{ animation-delay:.9s }
 @keyframes rise-in{ to{ opacity:1; transform:none; } }
 
-.dv-path{ stroke-dasharray: 900; stroke-dashoffset: 900; }
-.is-drawn .dv-path{ animation: draw 1.7s cubic-bezier(.3,.7,.2,1) forwards; }
-.is-drawn .dv-path:nth-child(2){ animation-delay:.08s }
-.is-drawn .dv-path:nth-child(3){ animation-delay:.16s }
-.is-drawn .dv-path:nth-child(4){ animation-delay:.24s }
-.is-drawn .dv-path:nth-child(5){ animation-delay:.32s }
-@keyframes draw{ to{ stroke-dashoffset: 0; } }
-.dv-node{ opacity:0; }
-.is-drawn .dv-node{ animation: pop .5s ease forwards 1.5s; }
-.is-drawn .dv-node.is-hot{ animation-delay: 1.6s; }
-@keyframes pop{ to{ opacity:.45; } }
-.is-drawn .dv-node.is-hot{ animation-name: pop-hot; }
-@keyframes pop-hot{ to{ opacity:1; } }
-
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior:auto; }
   .rise, .hero .rise{ opacity:1 !important; transform:none !important; animation:none !important; }
-  .dv-path{ stroke-dashoffset:0 !important; animation:none !important; }
-  .dv-node{ opacity:.45 !important; animation:none !important; }
-  .dv-node.is-hot{ opacity:1 !important; }
   .btn, .tt tbody tr, .qa summary::after{ transition:none !important; }
 }
 </style>
@@ -534,68 +701,97 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
 
   <!-- ══════════ ヒーロー ══════════ -->
   <header class="hero">
-    <div class="shell">
-      <div class="hero__brand rise d1">
-        <span>AIMARK</span><em>実践者のコミュニティ／会員73名</em>
-      </div>
+    <div class="hero__stage">
+      <span class="hero__dots hero__dots--tr" aria-hidden="true"></span>
+      <span class="hero__dots hero__dots--bl" aria-hidden="true"></span>
 
-      <div class="hero__grid">
-        <div>
-          <p class="lead1 rise d2">
-            <span class="job">広告の人</span>、<span class="job">SEOの人</span>、<span class="job">ECの人</span>…<br>
-            全く違うマーケター同士でチームを組むと、<br>
-            1人では絶対に浮かばないアイデアが形になる。
-          </p>
+      <div class="shell">
+        <div class="hero__copy">
 
-          <h1 class="title rise d3">
-            <span class="sell">売れる</span>アプリ開発
-            <span class="small">1DAYチャレンジ会</span>
+          <div class="hero__brand rise d1">
+            <img class="hero__logo" src="./assets/logo_aimark.png" width="348" height="324" alt="aimark">
+            <p class="hero__names">
+              <b>AIMARK &times; TEAM &times; AI</b>
+              <i>1DAY HACKATHON</i>
+            </p>
+          </div>
+
+          <h1 class="title rise d2">
+            <span class="t-line">AIMARKのみんなが、</span>
+            <span class="t-line"><span class="t-teal">使いたくなるもの</span>をつくろう。</span>
           </h1>
 
-          <p class="lead3 rise d4">
-            イベントが終わる頃、きっと<br>
-            新しいAIの使い方を、隣の人から持ち帰ってます
-          </p>
-        </div>
+          <div class="hero__lower">
+            <div>
+              <ul class="promise rise d3">
+                <li>
+                  <span class="chip chip--check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.2" stroke="#0A96A2" stroke-width="1.9"/><path d="M7.7 12.3l2.9 2.9 5.7-6.2" stroke="#0A96A2" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>使える。
+                </li>
+                <li>
+                  <span class="chip chip--play" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M7.6 7.4h8.8a4.6 4.6 0 0 1 4.5 3.7l.7 3.6a2.6 2.6 0 0 1-4.6 2.1l-1.1-1.4H8.1L7 16.8a2.6 2.6 0 0 1-4.6-2.1l.7-3.6a4.6 4.6 0 0 1 4.5-3.7Z" fill="#fff"/><path d="M6.9 10.5v2.6M5.6 11.8h2.6" stroke="#FBC02D" stroke-width="1.5" stroke-linecap="round"/><circle cx="15.6" cy="11.3" r="1.05" fill="#FBC02D"/><circle cx="17.6" cy="13.1" r="1.05" fill="#FBC02D"/></svg>
+                  </span>遊べる。
+                </li>
+                <li>
+                  <span class="chip chip--heart" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 20.2S4.3 15.6 4.3 10.6A4.35 4.35 0 0 1 12 7.8a4.35 4.35 0 0 1 7.7 2.8c0 5-7.7 9.6-7.7 9.6Z" fill="#fff"/></svg>
+                  </span>役に立つ。
+                </li>
+              </ul>
 
-        <div class="diverge rise d5" id="diverge">
-          <svg viewBox="0 0 420 250" role="img" aria-label="朝、全チームに出される同じお題が、夕方には5つの別々のサービスに分かれる図">
-            <g>
-              <path class="dv-path" d="M20,125 C150,125 190,25 400,25"/>
-              <path class="dv-path" d="M20,125 C150,125 190,75 400,75"/>
-              <path class="dv-path is-hot" d="M20,125 C150,125 190,125 400,125"/>
-              <path class="dv-path" d="M20,125 C150,125 190,175 400,175"/>
-              <path class="dv-path" d="M20,125 C150,125 190,225 400,225"/>
-            </g>
-            <circle class="dv-seed" cx="20" cy="125" r="5.5"/>
-            <circle class="dv-node" cx="400" cy="25" r="4.5"/>
-            <circle class="dv-node" cx="400" cy="75" r="4.5"/>
-            <circle class="dv-node is-hot" cx="400" cy="125" r="4.5"/>
-            <circle class="dv-node" cx="400" cy="175" r="4.5"/>
-            <circle class="dv-node" cx="400" cy="225" r="4.5"/>
-          </svg>
-          <div class="diverge__cap">
-            <span>10:15 — 同じお題</span>
-            <span>16:15 — 5つの別物</span>
+              <p class="hero__note rise d4">正解は、<u>なんでもあり</u>。</p>
+
+              <p class="hero__lead rise d4">
+                チームとAIでアイデアをカタチにする、<br>
+                AIMARKの1DAYハッカソン。
+              </p>
+
+              <ul class="hero__specs rise d5">
+                <li>
+                  <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="11" r="5" stroke="#041F44" stroke-width="1.9"/><path d="M6.5 27c0-5.2 4.3-8.4 9.5-8.4s9.5 3.2 9.5 8.4" stroke="#041F44" stroke-width="1.9" stroke-linecap="round"/></svg>
+                  開発経験不問
+                </li>
+                <li>
+                  <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="11.5" r="4.2" stroke="#041F44" stroke-width="1.9"/><path d="M9.6 25.5c0-3.9 2.9-6.2 6.4-6.2s6.4 2.3 6.4 6.2" stroke="#041F44" stroke-width="1.9" stroke-linecap="round"/><circle cx="5.7" cy="13.6" r="3.1" stroke="#041F44" stroke-width="1.7"/><path d="M1.5 24.4c0-2.9 1.9-4.7 4.2-4.7.7 0 1.4.2 2 .5" stroke="#041F44" stroke-width="1.7" stroke-linecap="round"/><circle cx="26.3" cy="13.6" r="3.1" stroke="#041F44" stroke-width="1.7"/><path d="M30.5 24.4c0-2.9-1.9-4.7-4.2-4.7-.7 0-1.4.2-2 .5" stroke="#041F44" stroke-width="1.7" stroke-linecap="round"/></svg>
+                  3〜4人でチーム
+                </li>
+                <li>
+                  <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 3.5c1.2 7.1 5.4 11.3 12.5 12.5-7.1 1.2-11.3 5.4-12.5 12.5C14.8 21.4 10.6 17.2 3.5 16 10.6 14.8 14.8 10.6 16 3.5Z" stroke="#041F44" stroke-width="1.9" stroke-linejoin="round"/></svg>
+                  AIでつくる
+                </li>
+              </ul>
+            </div>
+
+            <div class="hero__photo rise d6">
+              <img src="./assets/01_hero_morning.jpg" alt="窓際の大きな木のテーブルを4人で囲み、1台のノートPCを一緒にのぞき込んで笑っている様子">
+            </div>
           </div>
+
         </div>
+      </div>
+
+      <div class="hero__wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+          <path d="M0,48 C160,28 340,34 600,50 C860,66 1090,60 1270,34 C1350,22 1400,10 1440,0 L1440,100 L0,100 Z" fill="#DCECEC"/>
+          <path d="M0,64 C160,44 340,50 600,66 C860,82 1090,76 1270,50 C1350,38 1400,26 1440,16 L1440,100 L0,100 Z" fill="#C0DDDE"/>
+        </svg>
       </div>
     </div>
 
-    <div class="hero__photo rise d6">
-      <img src="./assets/01_hero_morning.jpg" alt="窓際の大きな木のテーブルを4人で囲み、1台のノートPCを一緒にのぞき込んで笑っている様子">
-    </div>
-
-    <div class="shell">
-      <dl class="factstrip rise d6">
-        <div class="fact"><dt>Date</dt><dd>9月後半<small>を予定</small></dd></div>
-        <div class="fact"><dt>Time</dt><dd>10:00–17:00<small>受付 10:00〜</small></dd></div>
-        <div class="fact"><dt>Place</dt><dd>調整中<small>オフライン開催</small></dd></div>
-        <div class="fact"><dt>Seats</dt><dd>参加者15名<small>3〜4名のチーム制</small></dd></div>
-        <div class="fact"><dt>Fee</dt><dd>調整中<small>会場費の確定後に</small></dd></div>
-        <div class="fact"><dt>Bring</dt><dd>ノートPC<small>環境は事前案内</small></dd></div>
-        <div class="fact"><dt>Level</dt><dd>開発経験 不問<small>チーム開発も未経験可</small></dd></div>
-      </dl>
+    <div class="hero__foot">
+      <div class="shell">
+        <dl class="factstrip rise d6">
+          <div class="fact"><dt>Date</dt><dd>9月後半<small>を予定</small></dd></div>
+          <div class="fact"><dt>Time</dt><dd>10:00–17:00<small>受付 10:00〜</small></dd></div>
+          <div class="fact"><dt>Place</dt><dd>調整中<small>オフライン開催</small></dd></div>
+          <div class="fact"><dt>Seats</dt><dd>参加者15名<small>3〜4名のチーム制</small></dd></div>
+          <div class="fact"><dt>Fee</dt><dd>調整中<small>会場費の確定後に</small></dd></div>
+          <div class="fact"><dt>Bring</dt><dd>ノートPC<small>環境は事前案内</small></dd></div>
+          <div class="fact"><dt>Level</dt><dd>開発経験 不問<small>チーム開発も未経験可</small></dd></div>
+        </dl>
+      </div>
     </div>
   </header>
 
@@ -607,127 +803,119 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
       <div class="letter__inner">
 
         <div class="blk rise">
-          <p>AIの試行錯誤って、1人だと限界を感じる。</p>
-          <p>でも、AIの使い方ってどうやって学ぶんだろ…。そんな悩みを抱えていませんか？</p>
-
           <figure class="avatar">
             <img src="./assets/07_kai.webp" alt="主催者・かいのDiscordアイコン。丸眼鏡にスーツ姿のキャラクターが手を振っているイラスト">
             <figcaption>かい</figcaption>
           </figure>
 
-          <p>こんにちは、かいです。AIMARKのメンバーですが、今回はイベントの主催者をさせていただきました！</p>
-          <p>このイベントは、<strong>僕自身がAIMARKに感じている価値を、1日にギュッと凝縮して提供したいという個人的な思いを込めて、みんなで設計しました。</strong></p>
-          <p>その価値とは一体何か？それは、<strong>「みんなで楽しみながら、AIスキルが上達する」</strong>です。</p>
+          <p>こんにちは、かいです。今回、イベントの企画を、かおりさん、しいなさんと一緒に作りました！</p>
+          <p>このイベントは、<strong>僕自身がAIMARKに感じている価値「みんなで楽しみながら、AIスキルが上達する」を、</strong></p>
+          <p><strong>1日でギュッと全部得られる場所にしたいと思って、みんなでイベントの中身を作り込みました！</strong></p>
         </div>
 
         <div class="blk rise">
-          <p>僕がAIMARKに入ったばかりの頃、AIエージェント触りたてだったんですね。</p>
-          <p>MCP、サブエージェント、CLAUDE.md、自己改善ループ、、、こういったものを見聞きはしてたけど、何をどう手をつけたらいいのかさっぱり分からずにいました。</p>
-          <p>それが今では、ショート動画の自動投稿の仕組みも完成させ</p>
-          <p>AIが質の高いアウトプットをポン出しするための自己改善ループもスキルに組み込んだり、以前よりだいぶ蓄積されてきました。</p>
-          <p>我ながら、かなり良い感じの成長スピードでAI力が上達しているなと実感しています。</p>
-          <p>AIMARKがなかったら、間違いなく同じだけの成長は得られませんでした。</p>
+          <p>というのも、僕がAIMARKに入ったばかりの頃、AIエージェントの使い方をほとんど分かってなかったんですよね。</p>
+          <p>MCP、サブエージェント、CLAUDE.md、自己改善ループ…こういったものを見聞きはしてたけど、何をどう手をつけたらいいのかさっぱり分からずにいました。</p>
+          <p>それが今では、ショート動画の自動生成の仕組み構築、自己改善ループを組み込んだスキルの構築、MCP連携…etc</p>
+          <p>と、我ながら、結構速い速度でAI力が上がってるな〜と実感してます🤔</p>
+          <p>もしAIMARKに入ってなかったら、これほどAI力は身につきませんでした。</p>
         </div>
 
-        <h2 class="rise">僕のAI力が一気に上がった<br>ターニングポイント</h2>
+        <div class="blk rise">
+          <p>このイベントでは、僕が成長できた、AIMARKにある「AI力が大幅に伸びる秘訣」を、ふんだんに散りばめました。</p>
+          <p>せっかくなので、ここでは「その秘訣」について、共有したいと思います🙌</p>
+        </div>
+
+        <h2 class="rise">MCP、サブエージェント、CLAUDE.md。<br>名前は知ってる。でも、手は動かない。</h2>
 
         <div class="blk rise">
           <p>これはAIあるあるだと思うんですが、AIって有象無象の情報が大量に流れますよね。</p>
-          <p>YouTubeの解説動画、Xのポスト、Udemyの講座、書籍、、、</p>
-          <p>僕は、1年前も、今も、同じぐらい情報をウォッチしています。</p>
-          <p>でも1人でやっていた頃、「結局何が正しいの？」「本当はみんなどこで課題に躓いて、どうやって解決していくの？」</p>
-          <p>っていう、AI驚き屋やポジショントーク成分強めのAI情報商材屋、AIコンサルタントの情報が多くて、まずどの情報を当てにしていいのかさっぱりわかりませんでした。</p>
+          <p>僕が1人で情報を集めていた頃、「これで5時間の仕事が10分に！」みたいな宣伝文句が本当に多くて「胡散臭いなぁ」「本当かなぁ」と、半信半疑の日々が続きました。</p>
+          <p>（しかも、AIで実験するのが楽しいのに、これをシェアできる人がいないのも寂しかった🥹）</p>
         </div>
 
         <div class="blk rise">
-          <p>でもAIMARKのもくもく会（あ、今は「みんなでお題やろう会」でしたね）に毎回参加し、オフラインのイベントにも全部出席している、AIMARKイチの暇人だからこそ実感していることがあるんですね。</p>
-          <p>ここで得られる情報は何が違うかというと、実務で実際にどうAIを使っているか、</p>
-          <p>同じ熱量で試行錯誤している人たちから、直接AIの使い方を聞くことができるということです。</p>
+          <p>でもAIMARKのイベントに毎回参加していると、</p>
+          <ul>
+            <li>SNSでは中々聞けないリアルな苦労話から、</li>
+            <li>そこから編み出された、血肉の通ったAIの使い方まで、</li>
+          </ul>
+          <p>AI熱量が高い人達から、いーっぱい話を聞くことができたんですね。</p>
+          <p>ここで、AI活用法の引き出しが、ちょっとずつ自分の中に蓄積されていきました。</p>
+          <p>この引き出しが増えたことが、他では得られない財産なんですね。</p>
+        </div>
+
+        <h2 class="rise">AIを使っても上手くいかない…<br>課題を突破する力は、これで身につきました</h2>
+
+        <div class="blk rise">
+          <p>というのも、日々AIを使っていく中で、当然「全然うまくいかないー！」という時があるじゃないですか。</p>
+          <p>僕の場合、Opus 5になった時、マジでClaudeの文章力が落ちまくって、本当に苦労したんですよ。（酷い時はメルマガを1記事書くのに6時間ぐらいかかってました…。）</p>
+          <p>そんな時に、「あの時、複数のAIを組み合わせるスキルの組み方を教えてくれたな〜」と思い、試すわけですね。</p>
+          <p>すると、AIの文章力が、かなり良くなったんですよ！（お陰様でメルマガの執筆時間が、平均で2時間ぐらい減少しました😭）</p>
+          <p>今まで数ヶ月間、AIMARKで大量に引き出しを吸収させていただいたから、僕のAI力もどんどん伸びたんだと思います。（自分で言うか！と突っ込まれそうですが、本心からそう思っています。）</p>
         </div>
 
         <div class="blk rise">
-          <p>これを今まで、お題やろう会やオフライン会で、色んな人の話を聞く中で「Aさんはスキルをこういうふうに使ってた」「BさんはこのMCPを入れて、こういうふうに業務を回してたな」「Cさんはサブエージェントをこういう指示の出し方してたな」といった、</p>
-          <p>ネットには全くない、<strong>血肉の通ったAI活用法の引き出しが、ちょっとずつ自分の中に蓄積されていく</strong>んですね。</p>
+          <p>このように、日々色んな方から得た引き出しが、1つ1つの課題を解決するキッカケになるんです。</p>
+          <p>AIに悩み相談をしたら、解決策は提案してくれます。でもその解決策がうまく回らない時って、全然ありますよね。</p>
+          <p>だから、AI力を上げる上で大事なのは、<span class="mk">「どれだけ多くの引き出しを、自分自身が持っておくか」</span>なのです。</p>
+          <p><strong>これが、冒頭でお伝えした「AI力が大幅に伸びる秘訣」の正体です。</strong></p>
         </div>
 
-        <div class="blk rise">
-          <p>で、自分もAIを使っていく中で、当然「全然うまくいかないー！」という時があるわけです。</p>
-          <p>そんな時に、「あ、そういえばCさんがこういうふうにサブエージェントに指示してたな」と思い出し、「この活用法なら解決するんじゃね…？」と、新しい方法を試すことができるんですね。</p>
-          <p>これが僕のAI力を底上げしてる、大きな要因になってるんですね。</p>
-          <p>つまり、AIMARKを通じて集めた引き出しから、色んな打ち手を試せる。そして今のAIは賢いから、こちらから提案したものをいい感じに仕組みとして落とし込んでくれます。</p>
-          <p>大事なのは、AIに対して壁を感じた時、解決するのは<span class="mk">「どれだけ引き出しを持っているか」</span>なんですね。</p>
-          <p><strong>だから僕にとって、誇張でもなんでもなく、AIMARKで自然と集まった引き出しが、ブレイクスルーのきっかけとなっていったのです。</strong></p>
-        </div>
-
-        <h2 class="rise">引き出しを貯めるコツは<br>聞きに行く時間を作ること。ただ…</h2>
+        <h2 class="rise">1日あれば、AIマスターになる為の<br>引き出しが、驚くほど集まります</h2>
 
         <div class="blk rise">
-          <p>すみません、ちょっとだけ今から、皆勤賞マウントを取りますw</p>
-          <p>正直僕としては、AIMARKに関われば関わるほど、活きた引き出しが蓄積されていくからこそ、</p>
-          <p>「もっと皆さんも活用したらいいのに…」と、“勿体無い”と思ったりする時があるんですよね。</p>
-          <p>というのも、これだけ僕がAIMARKから色々と吸収できたのは、毎回欠かさず木曜は出席し、オフラインのイベントにも全部出席してこれたからに尽きるんですよね。（皆勤賞マウント）</p>
-        </div>
-
-        <div class="blk rise">
-          <p>例えば木曜の「みんなでお題やろう会」でも、とよくらさんやあやみさんが、プロンプトの入れ方を見せてくれたり、</p>
-          <p>実はXでも発信されてない、「こんなスキル便利だよ〜」とか「こんなMCP入れると楽になるよ〜」とか、教わったことがたくさんあって、この時間は結構引き出しが溜まっているんですよね。（あと単純に、チャットでワイワイできて楽しいですw）</p>
-          <p>Discordも、皆さん本当に親切なので、返信をすればすごく丁寧に色々と教えてくれます。</p>
-          <p>みんなでお酒を飲んだら、色んな人が本当に全然違うAIの使い方をしているので、さまざまな話が聞けて本当に面白いんですよね。</p>
-        </div>
-
-        <div class="blk rise">
-          <p>とはいえ、「だからもっと発言すればいいじゃん！」とならない気持ちも、十分にわかります。</p>
-          <p>そもそも僕自身、実はだいぶ人見知りが強いので、Discordには「🙋‍♂️聞いていい？」がありますが、あそこで質問するの、ちょっとハードル高いですよね。</p>
-          <p>ちょっと時間が空いちゃうと、独り言で呟くのも、なんとなくハードルが上がってしまうし、</p>
-          <p>毎週木曜日の夜に毎回参加するのも、仕事が忙しかったり、ご家庭をお持ちの方なんかは、<strong>本当に時間の確保がキツイ</strong>と思います。</p>
+          <p>とはいえ、僕が引き出しをたくさん得られたのは、AIMARKのイベント全部（オンライン、オフラインの両方）に出席して、日々色んな方のお話を聞いてきたからです。</p>
+          <p>でも、仕事が忙しい方、ご家庭をお持ちの方は、イベント全部に出席するのは非常に厳しいと思います。</p>
         </div>
 
         <div class="blk rise">
           <p>だからこそ！！！</p>
-          <p><strong>僕が今までAIMARKで感じてきた価値が、全部まるっと手に入る1日を作りたい！</strong></p>
-          <p>そういう個人的な思いで、とよくらさんとあやみさんにサポートいただきながら、かおりさんやしいなさんと一緒にイベントの企画を練ってきたんですね。</p>
+          <p><strong>AI活用の引き出しが大量に得られる1日を作りたい！</strong></p>
+          <p>そういう個人的な思いで、運営委員会の皆さんと一緒にイベントを作り込みました。</p>
+          <p>今回のイベントにご参加いただければ、あなたが抱える課題解決のヒントが、きっとたくさん見つかりますよ。</p>
         </div>
 
-        <h2 class="rise">なぜアプリ開発会なのか？</h2>
+        <h2 class="rise">みんなで取り組むから、<br>今まで全く知らなかったAIの使い方が<br>次々と飛び出すのです</h2>
 
         <div class="blk rise">
-          <p>では、一体なぜアプリ開発をやることになったのか？</p>
-          <p>それは、AIを使う瞬間の、プロンプトの指示の出し方、物事を考える時の視点、考えたこともないようなAIの使い方、、、</p>
-          <p>こういう実務で発生する生のAI活用法って、<strong>会話の中で引き出すのってかなり難易度高くないですか？</strong></p>
-          <p>僕の場合は皆勤賞なので（暇人なので）色んな方と楽しく交流できたから、ちょっとずつ引き出しを作れただけで、</p>
-          <p>1日で狙って引き出してください！と言われても、まぁ難しいですよね。</p>
-        </div>
-
-        <div class="blk rise">
-          <p>だから、<span class="mk">「チームを組んで、一緒にちょっとムズい課題に取り組む」</span>これが重要なんですね。</p>
-          <p>最後に、優勝チームを決める投票も行うので、ぜひ皆さん優勝に向けて頑張っていただきたいのですが、</p>
-          <p>ちょっとガチになってチームで取り組んで行ったら、色んな意見を出し合ったり、実際にAIをどう使って、どんなアプリを設計するかを議論しますよね。</p>
-          <p>この形を作っていく過程の中に、<strong>1人1人が持つ引き出しが次々と出てくる</strong>と思うんですよ。</p>
+          <p>では、なぜ「チームでのアプリ開発」が、AI活用の引き出しを増やせるのか。</p>
+          <p>みんなで良いアプリを作ろうと頑張ったら、</p>
+          <ul>
+            <li>色んな意見を出し合ったり、</li>
+            <li>AIにどう指示を出していくのか</li>
+          </ul>
+          <p>議論しますよね。</p>
         </div>
 
         <div class="blk rise">
-          <p>だから、<strong>あえて僕らの専門外であるアプリ開発に、みんなで全力で取り掛かる。</strong></p>
-          <p>しかも、売り方まで自分たちで考える。</p>
-          <p>これをAIMARKのメンバーでやったら、<strong>絶対にすごい1日になるな</strong>と思ったんです。</p>
-          <p>きっとイベントでは、1人では絶対に浮かばないアイデアが形になっていきますよ。</p>
+          <p>チームの中で、本当にたくさんのアイデアが飛び交うはずです。</p>
+          <p>僕はAIMARKの全イベントに出席してるからこそ確信しているのですが、ここのコミュニティの方々、本当にビックリするぐらい色んなAIの使い方してますよ！</p>
+          <p>本当、今まで何度「え！そんな使い方あるんですね！」と驚いたことか…。（これが良い引き出しになるんですよ）</p>
+          <p>ですので、真剣にアイデアを出し合うほど、当然1人1人の中にある引き出しも、たくさん飛び出してきますよね。</p>
+          <p>多種多様な人たちと真剣にアプリを作り上げたら、<strong class="ac">1日で相当引き出しが増えると思いませんか？</strong></p>
+          <p>僕は、このイベントがあなたのAI力向上に、間違いなく繋がると確信しています。</p>
         </div>
 
         <div class="blk rise">
-          <p>AIMARKには、SEOの人、広告の人、販売特化の人、全く違うタイプのマーケターがいます。</p>
-          <p>そんな、全然違うマーケター同士で意見を出し合い、AIの使い方を教えあったりしたら、<strong class="ac">1日で相当引き出しが増えると思いませんか？</strong></p>
-          <p>そして、共にアプリを作ったチームメイトは、その夜からAI友達になって、翌日からDiscordで一緒にワイワイできるようになります。</p>
-          <p>（大人になると、共通の趣味の友達を作れる場があるって、本当に貴重だなと実感します。）</p>
+          <p>そして、共にアプリを作ったチームメイトは、その夜から<span class="ac">AI友達</span>になって、翌日からDiscordで一緒にワイワイできるようになります。</p>
+          <p>引き出しが増えて、AI友達も増えるなんて、一石二鳥じゃないですか。</p>
         </div>
 
-        <h2 class="rise">コードは、書けなくて大丈夫です</h2>
+        <h2 class="rise">アプリを作ったことがない方にも、<br>ぜひ来ていただきたいです。</h2>
+        <h2 class="rise">なぜなら…</h2>
 
         <div class="blk rise">
-          <p>アプリ開発がテーマと聞いて、身構えた方もいるかもしれません。</p>
-          <p>もちろん、開発経験は不問です。（というか僕自身も、開発経験なんて全くありません）</p>
-          <p>当日は、AIに強い人も、そこまで強くない人も一緒にワイワイしたいと思っています。</p>
-          <p>開発経験は問いません。<strong>手を動かすのはAIです。</strong></p>
-          <p>できたものを決めるのも、参加者全員の投票です。軸は「自分が使いたい」「売れそうだと思った」サービス。だから、技術力の高さを競う場ではありません。</p>
-          <p>万が一、技術面で躓いてしまった場合も、とよくらさんやあやみさんが全力で助けてくれます。</p>
+          <p>ただ、</p>
+          <p>「私にはそんな、人の学びになる引き出しなんてない…。」<br>「アプリを作ったことがないから、当日迷惑をかけてしまわないか不安…。」</p>
+          <p>と思ってしまう方も、きっとおられると思います。</p>
+        </div>
+
+        <div class="blk rise">
+          <p>ご安心ください！</p>
+          <p>僕は、バイブコーディングをやった事がない方にも、自分専用のアプリを作る楽しさを知ってほしいです。</p>
+          <p>ですから、アプリ作りが初めての方にも安心して楽しんでいただけるよう、考えうる限りサポート体制を整えております。</p>
+          <p>（とはいえ初回の開催ですので、運営メンバーのぎこちなさがあっても、温かい目で見てくださいね…汗）</p>
         </div>
 
         <figure class="fig rise">
@@ -736,13 +924,10 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
         </figure>
 
         <div class="blk rise">
-          <p>だから、<strong>「AI好きな人たちとワイワイしながら、普段見ないAIの使い方を知りたい」</strong>という方は、ぜひ参加して欲しいです。</p>
-        </div>
-
-        <div class="blk rise">
-          <p>ただ、会場の関係上、<strong class="ac">参加枠は15名限定</strong>となってしまいました。</p>
-          <p>もしピンと来たなら、ぜひ奮ってご参加ください！</p>
-          <p>ぜひ一緒に、<strong class="ac">AI友達</strong>作って、いっぱいAI活用法を発見できる、とっても充実した1日にしていきましょう😆</p>
+          <p>ですので、今回のイベントも開発経験は不問です。</p>
+          <p>そして、AIMARKの皆さんは本当にいい人ばかりですから、間違いなく「参加してよかったー！楽しかったー！」と思える、実りある1日になりますよ🤭</p>
+          <p><strong>「AI好きな人たちとワイワイしながら、色んなAIの使い方を知りたい」</strong>という方は、ぜひ奮って参加してください。</p>
+          <p>一緒にアプリ開発を楽しみましょう😆</p>
         </div>
 
       </div>
@@ -751,12 +936,16 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
   </section>
 
   <!-- ══════════ 1日の流れ ══════════ -->
-  <section class="band" id="schedule">
+  <section class="band chapter" id="schedule">
     <div class="shell">
-      <p class="eyebrow rise">Schedule</p>
+
+      <div class="sechead rise">
+        <p class="sechead__en">Schedule</p>
+        <h2 class="sechead__ja">当日の流れ</h2>
+      </div>
 
       <div class="flow__head rise">
-        <h2>同じお題から始めて、<br>夕方には全チームが発表します</h2>
+        <h3 class="flow__lead">同じお題から始めて、<br>夕方には全チームが発表します</h3>
         <p>朝、全チームに同じお題が出ます。</p>
         <p>そこから3〜4名のチームで、「誰の、どんな場面の、何を解決するサービスにするか」を決めて、AIで形にして、売り方まで考えます。</p>
         <p>夕方には、同じお題から始めたはずの5チームが、全く違うサービスを持って並びます。それを全員で見る日です。</p>
@@ -957,20 +1146,6 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
       });
     }, { rootMargin: "0px 0px -12% 0px", threshold: 0.06 });
     targets.forEach(function(el){ io.observe(el); });
-  }
-
-  /* 分岐図を描く */
-  var dv = document.getElementById("diverge");
-  if (dv){
-    if (reduce) { dv.classList.add("is-drawn"); }
-    else {
-      var io2 = new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if (e.isIntersecting){ e.target.classList.add("is-drawn"); io2.unobserve(e.target); }
-        });
-      }, { threshold: 0.35 });
-      io2.observe(dv);
-    }
   }
 
   /* 左端の時刻レール — スクロール位置を 10:00〜17:00 に写す */
