@@ -6,7 +6,7 @@
 <style>
 /* ============================================================
    売れるアプリ開発 1DAYチャレンジ会 — 募集ページ
-   コンセプト：ページ全体が「10:00 → 17:00 の、一日」。
+   コンセプト：ページ全体が「10:00 → 18:00 の、一日」。
    地色が朝の光から夕方の光へ移動し、最後に日が落ちる。
    単一の視覚世界にコミットした設計のため、ダークテーマの
    切り替えは持たない（配色はすべて明示指定）。
@@ -565,6 +565,13 @@ figure{ margin: 0; }
 .tt tbody tr{ transition: background-color .25s ease; }
 .tt tbody tr:hover{ background: rgba(255,255,255,.55); }
 .tt__note{ margin-top: 1.6rem; max-width: var(--measure); font-size:.96rem; }
+/* 狭い画面：横スクロールさせず、内容を折り返して見せる */
+@media (max-width: 560px){
+  .tt table{ min-width: 0; }
+  .tt th, .tt td{ padding: .8rem .5rem; }
+  .tt .t{ width: 4.2rem; font-size: 1.08rem; }
+  .tt td:last-child{ font-size: .9rem; line-height: 1.7; }
+}
 
 /* ── 開催概要 ────────────────────────────────── */
 .outline__grid{
@@ -591,6 +598,86 @@ figure{ margin: 0; }
 .notecard h3{ margin-bottom: 1rem; }
 .notecard p{ font-size:.97rem; }
 .notecard p:last-child{ margin-bottom:0; }
+.inl{ color: var(--accent-dp); text-underline-offset: .2em; }
+.inl:hover{ color: var(--accent); }
+
+/* 参加費カード：1,500円 → 15名以上で全員無料 */
+.outline__side{ display:grid; gap: 1.4rem; align-self: start; }
+.feecard{
+  background: var(--paper-card); border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+  padding: clamp(1.6rem,3vw,2.2rem);
+  font-family: var(--font-display);
+}
+.feecard__label{
+  font-family: var(--font-util); font-weight:600; font-size:.78rem;
+  letter-spacing:.3em; text-transform: uppercase; color: var(--ink-3);
+  margin: 0 0 .6rem;
+}
+.feecard__price{
+  margin:0;
+  font-weight:900; font-size: clamp(2.2rem,4.6vw,2.7rem); line-height:1.1;
+  letter-spacing:.01em; font-variant-numeric: tabular-nums;
+}
+.feecard__price span{ font-size:1rem; font-weight:700; margin-right:.45rem; }
+.feecard__price small{ font-size:1.1rem; font-weight:700; margin-left:.15rem; }
+.feecard__cond{
+  display:flex; align-items:center; gap:.65rem;
+  margin: 1.15rem 0 .35rem;
+  font-weight:700; font-size:.98rem; color: var(--ink-2);
+}
+.feecard__cond::before{
+  content:""; flex:none; width:9px; height:9px; margin-top:-.25rem;
+  border-right:2px solid var(--accent); border-bottom:2px solid var(--accent);
+  transform: rotate(45deg);
+}
+.feecard__cond b{ color: var(--ink); }
+.feecard__free{
+  margin:0; font-weight:900; font-size: clamp(1.7rem,3.6vw,2.1rem); line-height:1.3;
+  color: var(--accent-dp); letter-spacing:.04em;
+}
+.feecard__free b{
+  font-weight:900; margin-left:.25rem;
+  background-image: linear-gradient(transparent 62%, var(--accent-mk) 62%);
+}
+.feecard__note{
+  margin: 1.2rem 0 0; padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-body); font-size:.93rem; line-height:1.85; color: var(--ink-2);
+}
+
+/* ── 参加までの流れ ─────────────────────────── */
+.join__lead{ max-width: var(--measure); font-size:1.02rem; }
+.steps{
+  list-style:none; margin: clamp(1.8rem,4vw,2.6rem) 0 0; padding:0;
+  display:grid; grid-template-columns: 1fr; gap: 1rem;
+}
+@media (min-width: 900px){
+  .steps{ grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(1.1rem,2.2vw,1.8rem); }
+}
+.step{
+  background: var(--paper-card); border: 1px solid var(--rule);
+  padding: clamp(1.5rem,2.8vw,2rem);
+}
+.step__no{ display:flex; align-items: baseline; gap:.8rem; margin:0 0 .9rem; }
+.step__no b{
+  font-family: var(--font-util); font-weight:600; font-size:2.2rem;
+  line-height:1; color: var(--accent); letter-spacing:.02em;
+}
+.step__no span{
+  font-family: var(--font-util); font-weight:600; font-size:.78rem;
+  letter-spacing:.3em; text-transform: uppercase; color: var(--ink-2);
+}
+.step h3{ margin-bottom:.8rem; }
+.step p{ font-size:.96rem; margin-bottom:.8em; }
+.step p:last-child{ margin-bottom:0; }
+.step__opts{ list-style:none; margin:.1rem 0 1rem; padding:0; display:grid; gap:.55rem; }
+.step__opts li{ display:flex; align-items:baseline; gap:.7rem; font-size:.93rem; line-height:1.7; }
+.step__opts b{
+  flex:none; font-family: var(--font-display); font-weight:700; font-size:.84rem;
+  padding:.15rem .75rem; border:1px solid var(--rule-2); border-radius:999px; background:#FFF;
+}
+.step__opts li:first-child b{ background: var(--accent); border-color: var(--accent); color:#FFF8F3; }
 
 /* ── FAQ ─────────────────────────────────────── */
 .faq{ max-width: 46rem; }
@@ -783,11 +870,11 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
     <div class="hero__foot">
       <div class="shell">
         <dl class="factstrip rise d6">
-          <div class="fact"><dt>Date</dt><dd>9月後半<small>を予定</small></dd></div>
-          <div class="fact"><dt>Time</dt><dd>10:00–17:00<small>受付 10:00〜</small></dd></div>
+          <div class="fact"><dt>Date</dt><dd>11月21日（土）<small>2026年</small></dd></div>
+          <div class="fact"><dt>Time</dt><dd>10:00–18:00<small>受付 9:45〜</small></dd></div>
           <div class="fact"><dt>Place</dt><dd>調整中<small>オフライン開催</small></dd></div>
           <div class="fact"><dt>Seats</dt><dd>参加者15名<small>3〜4名のチーム制</small></dd></div>
-          <div class="fact"><dt>Fee</dt><dd>調整中<small>会場費の確定後に</small></dd></div>
+          <div class="fact"><dt>Fee</dt><dd>1,500円<small>15名以上で全員無料</small></dd></div>
           <div class="fact"><dt>Bring</dt><dd>ノートPC<small>環境は事前案内</small></dd></div>
           <div class="fact"><dt>Level</dt><dd>開発経験 不問<small>チーム開発も未経験可</small></dd></div>
         </dl>
@@ -947,18 +1034,18 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
       <div class="flow__head rise">
         <h3 class="flow__lead">同じお題から始めて、<br>夕方には全チームが発表します</h3>
         <p>朝、全チームに同じお題が出ます。</p>
-        <p>そこから3〜4名のチームで、「誰の、どんな場面の、何を解決するサービスにするか」を決めて、AIで形にして、売り方まで考えます。</p>
-        <p>夕方には、同じお題から始めたはずの5チームが、全く違うサービスを持って並びます。それを全員で見る日です。</p>
+        <p>そこから3〜4名のチームで、「誰の、どんな場面の、何を解決するサービスにするか」を決めて、AIで形にして、発表まで仕上げます。</p>
+        <p>夕方には、同じお題から始めたはずの4チームが、全く違うサービスを持って並びます。それを全員で見る日です。</p>
       </div>
 
       <div class="phase rise">
         <div>
           <div class="phase__no">
-            <b>01</b><span>Find</span><span class="phase__min">90 min</span>
+            <b>01</b><span>Team Start</span><span class="phase__min">150 min</span>
           </div>
-          <h3>誰なら欲しいか、を見つける</h3>
-          <p>ターゲット、用途、利用シーン。切り口を変えながら、チームでお題を再解釈します。</p>
-          <p>ゴールは、「誰の、どんな場面の、何を解決するサービスか」が1行で言えること。ここが、マーケターの本業がいちばん効くところです。</p>
+          <h3>チームで決めて、つくり始める</h3>
+          <p>自己紹介から始めて、やることの確認、役割分担、アイデア出し。方向が見えたら、そのまま制作に入ります。</p>
+          <p>決めるのは、「誰の、どんな場面の、何を解決するサービスか」。ここが、マーケターの本業がいちばん効くところです。</p>
         </div>
         <div class="phase__media">
           <img src="./assets/02_find.jpg" alt="木のテーブルいっぱいに色とりどりの付箋を広げ、数人の手が書き込んだり並べ替えたりしている様子">
@@ -968,11 +1055,11 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
       <div class="phase phase--flip rise">
         <div>
           <div class="phase__no">
-            <b>02</b><span>Make</span><span class="phase__min">150 min</span>
+            <b>02</b><span>Make</span><span class="phase__min">160 min</span>
           </div>
-          <h3>AIで形にする</h3>
-          <p>見つけた価値を、AIでアプリの最小版にしていきます。</p>
-          <p>完成品でなくて大丈夫です。まず、触れるところまで。詰まったら手を挙げてください。技術サポーターが入ります。</p>
+          <h3>AIで形にして、発表の準備まで</h3>
+          <p>お昼休憩は1時間。お店でランチをしながら作戦会議をしても、会場で食べながら手を動かしても大丈夫です。過ごし方はチームにお任せします。</p>
+          <p>午後は、アプリ制作の続きと動作テスト、そしてプレゼン資料づくり。完成品でなくて大丈夫です。まず、触れるところまで。詰まったら手を挙げてください。技術サポーターが入ります。</p>
         </div>
         <div class="phase__media">
           <img src="./assets/03_make.jpg" alt="ノートPCの画面を指さしながら話す人と、その隣で自分のPCに打ち込む人">
@@ -982,11 +1069,11 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
       <div class="phase rise">
         <div>
           <div class="phase__no">
-            <b>03</b><span>Sell &amp; Pitch</span><span class="phase__min">45 min</span>
+            <b>03</b><span>Pitch &amp; Vote</span><span class="phase__min">7 min × 4</span>
           </div>
-          <h3>売り方を決めて、発表する</h3>
-          <p>誰に売るか。何を価値として伝えるか。サービス名とキャッチコピーまで作って、3分の発表に仕立てます。</p>
-          <p>最後は全員の投票です。軸は「自分が使いたい」「売れそうだと思った」サービス。技術力の高さを競う場ではありません。</p>
+          <h3>発表して、全員で投票する</h3>
+          <p>1チーム7分の発表です。誰のためのサービスか。何を価値として伝えるか。午後につくったプレゼン資料で伝えます。</p>
+          <p>最後は全員の投票で、優勝チームを決めます。軸は「自分が使いたい」「売れそうだと思った」サービス。技術力の高さを競う場ではありません。</p>
         </div>
         <div class="phase__media">
           <img src="./assets/04_pitch.jpg" alt="明るい部屋の前方に立って発表する人と、それを見上げて聞いている参加者たち">
@@ -1000,23 +1087,23 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
               <tr><th scope="col">Time</th><th scope="col">Programme</th></tr>
             </thead>
             <tbody>
-              <tr><td class="t">10:00</td><td>受付・開場</td></tr>
-              <tr class="is-key"><td class="t">10:15</td><td>オープニング（お題発表・チーム発表）</td></tr>
-              <tr><td class="t">10:35</td><td>チーム内アイスブレイク（自己紹介から始めます）</td></tr>
-              <tr class="is-key"><td class="t">10:50</td><td>① FIND｜価値を見つける</td></tr>
-              <tr><td class="t">12:20</td><td>中間共有・昼休憩</td></tr>
-              <tr class="is-key"><td class="t">13:00</td><td>② MAKE｜AIで形にする（途中休憩あり）</td></tr>
-              <tr class="is-key"><td class="t">15:30</td><td>③ SELL &amp; PITCH｜売り方とプレゼンをつくる</td></tr>
-              <tr><td class="t">16:15</td><td>発表（1チーム3分）</td></tr>
-              <tr><td class="t">16:40</td><td>全員投票</td></tr>
-              <tr><td class="t">16:50</td><td>表彰・クロージング</td></tr>
-              <tr><td class="t">17:00</td><td>終了（希望者で懇親へ）</td></tr>
+              <tr><td class="t">9:45</td><td>開場・受付</td></tr>
+              <tr class="is-key"><td class="t">10:00</td><td>オープニング（お題発表・チーム発表・進め方の説明）</td></tr>
+              <tr class="is-key"><td class="t">10:15</td><td>① チーム戦スタート（自己紹介・役割分担・アイデア出し・制作）</td></tr>
+              <tr><td class="t">12:45</td><td>中間共有（1チーム5分、テーマと進捗を共有）</td></tr>
+              <tr><td class="t">13:00</td><td>ランチ休憩（過ごし方はチームにお任せ）</td></tr>
+              <tr class="is-key"><td class="t">14:00</td><td>② 制作再開（アプリ制作・動作テスト・プレゼン資料づくり）</td></tr>
+              <tr class="is-key"><td class="t">16:40</td><td>③ 発表（1チーム7分）</td></tr>
+              <tr><td class="t">17:20</td><td>全員投票</td></tr>
+              <tr><td class="t">17:30</td><td>表彰・クロージング</td></tr>
+              <tr><td class="t">17:50</td><td>会場の片付け</td></tr>
+              <tr><td class="t">18:00</td><td>終了（希望者で懇親会へ）</td></tr>
             </tbody>
           </table>
         </div>
         <div class="tt__note">
           <p>時間は目安です。正直に書くと、運営も全員、この形式のイベントは初めてです。だから細かい手順書は用意せず、チームの判断で前後させてもらう進行にしています。</p>
-          <p>代わりに、お昼の中間共有で各チームが「うちはこの方向で行きます」を1分ずつ話します。他のチームの切り口が耳に入るのは、ここが最初です。</p>
+          <p>代わりに、12:45の中間共有で、各チームがテーマと進捗を5分ずつ話します。他のチームの切り口が耳に入るのは、ここが最初です。</p>
         </div>
       </div>
     </div>
@@ -1032,12 +1119,13 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
         <div class="rise">
           <table class="spec">
             <tbody>
-              <tr><th scope="row">日程</th><td>2026年9月後半を予定<br>（会場の確定後、正式にご案内します）</td></tr>
-              <tr><th scope="row">時間</th><td>10:00〜17:00<br>（受付 10:00〜／終了後、希望者で懇親）</td></tr>
+              <tr><th scope="row">日程</th><td>2026年11月21日（土）</td></tr>
+              <tr><th scope="row">時間</th><td>10:00〜18:00<br>（開場・受付 9:45〜／終了後、希望者で懇親会）</td></tr>
               <tr><th scope="row">形式</th><td>オフライン開催</td></tr>
-              <tr><th scope="row">会場</th><td><span class="tbd">調整中</span>（確定次第、このページでご案内します）</td></tr>
+              <tr><th scope="row">会場</th><td><span class="tbd">調整中</span>（確定次第、このページとDiscordでご案内します）</td></tr>
               <tr><th scope="row">定員</th><td>参加者15名（3〜4名ずつのチームに分かれます）</td></tr>
-              <tr><th scope="row">参加費</th><td><span class="tbd">調整中</span>（会場費の確定後にご案内します）</td></tr>
+              <tr><th scope="row">参加費</th><td>1人1,500円（当日、受付で現金にてお支払いください）<br><span class="ac">参加者が15名以上集まった場合は、全員無料</span></td></tr>
+              <tr><th scope="row">申込方法</th><td>AIMARKのDiscordの投票で「参加する」を選択（<a class="inl" href="#join">参加までの流れ</a>）</td></tr>
               <tr><th scope="row">持ち物</th><td>ノートPC（必要な環境は、参加確定後に事前にご案内します）</td></tr>
               <tr><th scope="row">参加条件</th><td>開発経験・チーム開発の経験は問いません</td></tr>
               <tr><th scope="row">サポート</th><td>技術サポーターが各チームを巡回します</td></tr>
@@ -1046,12 +1134,55 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
           </table>
         </div>
 
-        <div class="notecard rise">
-          <h3>チーム分けについて</h3>
-          <p>チームは運営が組みます。仕事のジャンルや、普段使っているAIが散らばるように分けます。</p>
-          <p>会場と参加費は、決まり次第このページを更新します。</p>
+        <div class="outline__side">
+          <div class="feecard rise">
+            <p class="feecard__label">Fee</p>
+            <p class="feecard__price"><span>1人</span>1,500<small>円</small></p>
+            <p class="feecard__cond"><span>参加者が<b>15名以上</b>集まったら</span></p>
+            <p class="feecard__free">全員<b>無料</b></p>
+            <p class="feecard__note">お支払いは当日、受付で現金にてお願いします。無料になった場合は、お支払いは不要です。</p>
+          </div>
+
+          <div class="notecard rise">
+            <h3>チーム分けについて</h3>
+            <p>チームは運営が組みます。仕事のジャンルや、普段使っているAIが散らばるように分けます。</p>
+            <p>会場は、決まり次第このページとDiscordでお知らせします。</p>
+          </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 参加までの流れ ══════════ -->
+  <section class="band" id="join">
+    <div class="shell">
+      <p class="eyebrow rise">How to Join</p>
+      <h2 class="rise">参加までの流れ</h2>
+      <p class="join__lead rise">申込は、AIMARKのDiscordに立てる「投票」で受け付けます。参加費の事前のお支払いはありません。</p>
+
+      <ol class="steps">
+        <li class="step rise">
+          <p class="step__no"><b>01</b><span>Vote</span></p>
+          <h3>Discordの投票に答える</h3>
+          <p>選択肢は2つです。</p>
+          <ul class="step__opts">
+            <li><b>参加する</b><span>11月21日に参加する方</span></li>
+            <li><b>調整中</b><span>参加したいけれど、予定がまだ読めない方</span></li>
+          </ul>
+          <p>「調整中」の方は、予定が決まったら「参加する」に投票し直してください。</p>
+        </li>
+        <li class="step rise">
+          <p class="step__no"><b>02</b><span>Prepare</span></p>
+          <h3>事前のご案内を受け取る</h3>
+          <p>「参加する」に投票した方へ、会場、必要なPC環境、事前アンケートをDiscordでご案内します。</p>
+        </li>
+        <li class="step rise">
+          <p class="step__no"><b>03</b><span>The Day</span></p>
+          <h3>当日、受付で参加費を払う</h3>
+          <p>9:45から受付です。参加費1,500円を、現金でお支払いください。</p>
+          <p>参加者が15名以上集まって全員無料になった場合は、お支払いは不要です。</p>
+        </li>
+      </ol>
     </div>
   </section>
 
@@ -1072,11 +1203,11 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
         </details>
         <details class="qa">
           <summary>初対面の人とチームを組むのが不安です。</summary>
-          <div class="qa__a"><p>最初の15分は、自己紹介とアイスブレイクから始めます。1チーム3〜4名の少人数で、全員に発言の機会が回る進行にしています。</p></div>
+          <div class="qa__a"><p>チーム戦は、自己紹介から始めます。1チーム3〜4名の少人数で、全員に発言の機会が回る進行にしています。</p></div>
         </details>
         <details class="qa">
           <summary>いいアイデアが浮かばない気がします。</summary>
-          <div class="qa__a"><p>筋の悪いアイデアほど歓迎です。FINDの前半は「NGなし・数優先」で、思いついた案を全部書き出すルールにしています。運営が先に、いちばん売れなさそうな案を出します。</p></div>
+          <div class="qa__a"><p>筋の悪いアイデアほど歓迎です。アイデア出しは「NGなし・数優先」で、思いついた案を全部書き出すルールにしています。運営が先に、いちばん売れなさそうな案を出します。</p></div>
         </details>
         <details class="qa">
           <summary>途中で手が止まったら、どうすればいいですか？</summary>
@@ -1092,7 +1223,15 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
         </details>
         <details class="qa">
           <summary>終了後の予定はありますか？</summary>
-          <div class="qa__a"><p>17時に終了します。そのあと、希望者で懇親の場を予定しています。こちらは自由参加です。</p></div>
+          <div class="qa__a"><p>18時に終了します。そのあと、希望者で懇親会を予定しています。こちらは自由参加です。</p></div>
+        </details>
+        <details class="qa">
+          <summary>参加費は、いつ・どうやって払いますか？</summary>
+          <div class="qa__a"><p>当日、受付で現金でお支払いください。参加費は1人1,500円です。ただし、参加者が15名以上集まった場合は全員無料になり、お支払いは不要です。</p></div>
+        </details>
+        <details class="qa">
+          <summary>参加したいのですが、予定がまだ確定していません。</summary>
+          <div class="qa__a"><p>Discordの投票で「調整中」を選んでおいてください。予定が決まったら、「参加する」に投票し直していただければ大丈夫です。</p></div>
         </details>
       </div>
     </div>
@@ -1107,11 +1246,12 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
     <div class="shell">
       <div class="cta__inner">
         <p class="eyebrow">Apply</p>
-        <h2>9月後半のどこか、<br>丸一日だけ空けておいてください。</h2>
+        <h2>11月21日（土）、<br>丸一日だけ空けておいてください。</h2>
         <p>朝は、隣の人が何をやっている人かも知りません。夕方には、その人の手元を丸一日ぶん見終わっています。</p>
-        <!-- TODO: 申込フォームのURLに差し替える（会場・参加費の確定後） -->
-        <a class="btn" href="#apply">参加を申し込む <span>1DAY</span></a>
-        <p class="cta__note">申込の受付は、会場と参加費が決まってから開始します。決まり次第、このページとDiscordでお知らせします。</p>
+        <p>参加費は1人1,500円。参加者が15名以上集まれば、全員無料になります。</p>
+        <!-- TODO: Discordの投票メッセージのURL（メッセージを右クリック→「メッセージリンクをコピー」）に差し替える -->
+        <a class="btn" href="#apply">Discordで参加を投票する <span>VOTE</span></a>
+        <p class="cta__note">投票の選択肢は「参加する」「調整中」の2つです。予定がまだ読めない方は「調整中」を選び、決まったら「参加する」に投票し直してください。参加費は当日、受付で現金でお支払いいただきます。</p>
       </div>
     </div>
   </section>
@@ -1148,7 +1288,7 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
     targets.forEach(function(el){ io.observe(el); });
   }
 
-  /* 左端の時刻レール — スクロール位置を 10:00〜17:00 に写す */
+  /* 左端の時刻レール — スクロール位置を 10:00〜18:00 に写す */
   var mark = document.getElementById("railMark");
   var now  = document.getElementById("railNow");
   var rail = document.querySelector(".rail");
@@ -1158,7 +1298,7 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
       ticking = false;
       var h = document.documentElement.scrollHeight - window.innerHeight;
       var p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
-      var mins = 600 + p * 420;                       /* 10:00 → 17:00 */
+      var mins = 600 + p * 480;                       /* 10:00 → 18:00 */
       var hh = Math.floor(mins / 60);
       var mm = Math.floor(mins % 60 / 5) * 5;
       now.textContent = hh + ":" + (mm < 10 ? "0" + mm : mm);
