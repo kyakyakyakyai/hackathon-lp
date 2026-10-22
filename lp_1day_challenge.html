@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AIMARK 1DAYハッカソン｜AIMARKのみんなが、使いたくなるものをつくろう。</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -313,16 +315,16 @@ section{ position: relative; }
 /* 狭い画面：約束／参加のかたちを1行に収める */
 @media (max-width: 460px){
   .promise{ gap: .35rem; row-gap: .6rem; }
-  .promise li{ font-size: .78rem; gap: .4rem; }
+  .promise li{ font-size: .86rem; gap: .4rem; }
   .promise li + li{ padding-left: .35rem; }
-  .chip{ width: 26px; height: 26px; }
-  .hero__specs li{ padding: 0 .75rem; font-size: .7rem; gap: .4rem; }
-  .hero__specs svg{ width: 22px; }
+  .chip{ width: 28px; height: 28px; }
+  .hero__specs li{ padding: 0 .75rem; font-size: .8rem; gap: .4rem; }
+  .hero__specs svg{ width: 24px; }
 }
 @media (max-width: 360px){
-  .promise li{ font-size: .72rem; }
-  .hero__specs li{ padding: 0 .6rem; font-size: .66rem; }
-  .hero__specs svg{ width: 20px; }
+  .promise li{ font-size: .8rem; }
+  .hero__specs li{ padding: 0 .6rem; font-size: .74rem; }
+  .hero__specs svg{ width: 22px; }
 }
 
 /* 写真 */
@@ -570,7 +572,7 @@ figure{ margin: 0; }
   .tt table{ min-width: 0; }
   .tt th, .tt td{ padding: .8rem .5rem; }
   .tt .t{ width: 4.2rem; font-size: 1.08rem; }
-  .tt td:last-child{ font-size: .9rem; line-height: 1.7; }
+  .tt td:last-child{ font-size: .94rem; line-height: 1.7; }
 }
 
 /* ── 開催概要 ────────────────────────────────── */
@@ -727,6 +729,7 @@ figure{ margin: 0; }
 .cta .eyebrow{ color: var(--dusk-ink-2); }
 .cta .eyebrow::after{ background: rgba(239,232,219,.2); }
 .cta h2{ color: var(--dusk-ink); font-size: clamp(1.6rem,4vw,2.5rem); }
+.nb{ display: inline-block; }  /* 語句の途中で改行させない */
 .cta p{ color: var(--dusk-ink-2); font-size:1.01rem; }
 .btn{
   display:inline-flex; align-items:center; gap:.9rem;
@@ -754,6 +757,16 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
   font-family: var(--font-util); font-weight:500; font-size:.8rem; letter-spacing:.14em;
 }
 .foot p{ margin:0; }
+
+/* ── スマホ：補足の小さい文字を読める大きさに ─────── */
+@media (max-width: 560px){
+  .fact dt{ font-size: .72rem; }
+  .fact dd{ font-size: 1rem; }
+  .fact dd small{ font-size: .82rem; }
+  .spec th{ font-size: .84rem; width: 5.6rem; }
+  .fig figcaption{ font-size: .84rem; letter-spacing: .08em; line-height: 1.7; }
+  .foot{ font-size: .84rem; letter-spacing: .06em; }
+}
 
 /* ── 出現アニメーション ─────────────────────── */
 .rise{ opacity:0; transform: translateY(22px); }
@@ -1251,7 +1264,7 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
     <div class="shell">
       <div class="cta__inner">
         <p class="eyebrow">Apply</p>
-        <h2>11月21日（土）、<br>丸一日だけ空けておいてください。</h2>
+        <h2>11月21日（土）、<br><span class="nb">丸一日だけ</span><span class="nb">空けておいてください。</span></h2>
         <p>朝は、隣の人が何をやっている人かも知りません。夕方には、その人の手元を丸一日ぶん見終わっています。</p>
         <p>参加費は1人1,500円。参加者が15名以上集まれば、全員無料になります。</p>
         <!-- TODO: Discordの投票メッセージのURL（メッセージを右クリック→「メッセージリンクをコピー」）に差し替える -->
