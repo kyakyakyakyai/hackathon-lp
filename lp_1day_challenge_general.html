@@ -753,6 +753,109 @@ figure{ margin: 0; }
   border-left: 1px solid rgba(239,232,219,.22); padding-left: 1.1rem;
 }
 
+/* ── 申込ボタン（一般募集） ───────────────────── */
+.btn-apply{
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: .75rem;
+  min-height: 3.6rem; padding: 1rem 2.4rem;
+  font-family: var(--font-display); font-weight: 900; font-size: 1.16rem; letter-spacing: .08em;
+  color: #FFF8F3; background: var(--accent); text-decoration: none;
+  border-radius: 999px;
+  box-shadow: 0 14px 28px -14px rgba(200,64,42,.85), inset 0 -3px 0 rgba(0,0,0,.14);
+  transition: background-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.btn-apply svg{ width: 1.15em; height: 1.15em; flex: none; transition: transform .25s ease; }
+.btn-apply:hover{
+  background: var(--accent-dp); transform: translateY(-2px);
+  box-shadow: 0 20px 34px -16px rgba(200,64,42,.95), inset 0 -3px 0 rgba(0,0,0,.14);
+}
+.btn-apply:hover svg{ transform: translateX(4px); }
+.btn-apply:focus-visible{ outline: 3px solid rgba(200,64,42,.45); outline-offset: 3px; }
+/* ボタンを横切る光の筋 */
+.btn-apply::after{
+  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent);
+  transform: skewX(-20deg); animation: apply-shine 3.6s ease-in-out infinite;
+}
+@keyframes apply-shine{ 0%, 62%{ left: -60%; } 100%{ left: 130%; } }
+.btn-apply--xl{ font-size: 1.3rem; min-height: 4.2rem; padding: 1.15rem 3rem; }
+.btn-apply--sm{ font-size: 1.02rem; min-height: 3.1rem; padding: .8rem 1.7rem; }
+@media (max-width: 560px){ .btn-apply{ width: 100%; } }
+.apply__sub{
+  margin: .7rem 0 0; font-family: var(--font-display); font-weight: 500;
+  font-size: .82rem; letter-spacing: .04em; color: var(--ink-3);
+}
+
+/* 「一般募集 3名限定」バッジ */
+.limit{
+  display: inline-flex; align-items: stretch; margin: 0 0 .9rem;
+  font-family: var(--font-display); font-weight: 900; line-height: 1;
+  border: 2px solid var(--accent); border-radius: 6px; overflow: hidden; background: #FFF;
+}
+.limit__tag{
+  display: flex; align-items: center; padding: .5rem .75rem;
+  background: var(--accent); color: #FFF8F3; font-size: .9rem; letter-spacing: .08em;
+}
+.limit__num{
+  display: flex; align-items: baseline; gap: .12rem; padding: .35rem .8rem .4rem;
+  color: var(--accent-dp); font-size: 1.05rem; letter-spacing: .04em;
+}
+.limit__num b{ font-family: var(--font-util); font-weight: 600; font-size: 1.9rem; line-height: .9; }
+
+.apply--hero{ margin-top: clamp(1.7rem, 3.4vw, 2.3rem); }
+.fact--hot dd{ color: var(--accent-dp); }
+
+/* 本文中の申込カード */
+.applycard{
+  display: grid; gap: 1.2rem; align-items: center;
+  margin-top: clamp(2.6rem, 5vw, 3.4rem);
+  padding: clamp(1.5rem, 3vw, 2.1rem);
+  background: var(--paper-card); border: 1px solid var(--rule); border-left: 4px solid var(--accent);
+}
+@media (min-width: 760px){ .applycard{ grid-template-columns: minmax(0,1fr) auto; } }
+.applycard .limit{ margin-bottom: .7rem; }
+.applycard__lead{
+  margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: .98rem; line-height: 1.7; color: var(--ink-2);
+}
+.applycard__act{ text-align: center; }
+.step .btn-apply{ margin-top: .3rem; }
+
+/* 最後の申込エリア（夜の背景） */
+.cta .limit{ background: transparent; }
+.cta .limit__num{ color: #FFF8F3; }
+.cta .apply__sub{ color: var(--dusk-ink-2); }
+.cta .btn-apply{ margin-top: 1.2rem; }
+
+/* 画面下の申込バー */
+.applybar{
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+  background: rgba(20,28,43,.96);
+  border-top: 1px solid rgba(239,232,219,.16);
+  padding: .65rem 0 calc(.65rem + env(safe-area-inset-bottom));
+  transform: translateY(110%); visibility: hidden;
+  transition: transform .35s ease, visibility 0s linear .35s;
+}
+.applybar.is-on{ transform: none; visibility: visible; transition: transform .35s ease; }
+.applybar__in{ display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.applybar__txt{ margin: 0; font-family: var(--font-display); line-height: 1.45; color: var(--dusk-ink); }
+.applybar__txt b{ display: flex; align-items: center; gap: .5rem; font-weight: 900; font-size: .98rem; }
+.applybar__txt em{
+  font-style: normal; padding: .18rem .55rem; border-radius: 4px;
+  background: var(--accent); color: #FFF8F3; font-size: .86rem; letter-spacing: .04em;
+}
+.applybar__txt small{ display: block; margin-top: .15rem; font-size: .78rem; font-weight: 500; color: var(--dusk-ink-2); }
+.applybar .btn-apply{ width: auto; flex: none; min-height: 2.9rem; padding: .65rem 1.5rem; font-size: 1rem; }
+@media (max-width: 560px){
+  .applybar__txt small{ display: none; }
+  .applybar__txt b{ flex-direction: column; align-items: flex-start; gap: .25rem; font-size: .86rem; }
+  .applybar .btn-apply{ padding: .65rem 1.1rem; font-size: .95rem; gap: .5rem; }
+}
+@media (prefers-reduced-motion: reduce){
+  .btn-apply::after{ animation: none; display: none; }
+  .btn-apply, .btn-apply svg, .applybar{ transition: none !important; }
+}
+
 footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp(3rem,5vw,4rem); }
 .foot{
   border-top: 1px solid rgba(239,232,219,.14);
@@ -866,6 +969,12 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
                   AIでつくる
                 </li>
               </ul>
+
+              <div class="apply apply--hero rise d5">
+                <p class="limit"><span class="limit__tag">一般募集</span><span class="limit__num"><b>3</b>名限定</span></p>
+                <div><a class="btn-apply" href="https://docs.google.com/forms/d/e/1FAIpQLSf2Q5C-8WGc7jw5pLVw1liBPY9jyY6YW6gpitbReQmep-fyqg/viewform" target="_blank" rel="noopener"><span>参加を申し込む</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+                <p class="apply__sub">申込フォームが新しいタブで開きます</p>
+              </div>
             </div>
 
             <div class="hero__photo rise d6">
@@ -890,7 +999,7 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
           <div class="fact"><dt>Date</dt><dd>11月21日（土）<small>2026年</small></dd></div>
           <div class="fact"><dt>Time</dt><dd>10:00–18:00<small>受付 9:45〜</small></dd></div>
           <div class="fact"><dt>Place</dt><dd>西新宿<small>西新宿駅 徒歩2分</small></dd></div>
-          <div class="fact"><dt>Seats</dt><dd>一般枠 3名<small>3〜4名のチーム制</small></dd></div>
+          <div class="fact fact--hot"><dt>Seats</dt><dd>一般枠 3名限定<small>3〜4名のチーム制</small></dd></div>
           <div class="fact"><dt>Fee</dt><dd>3,000円<small>税込</small></dd></div>
           <div class="fact"><dt>Bring</dt><dd>ノートPC<small>環境は事前案内</small></dd></div>
           <div class="fact"><dt>Level</dt><dd>開発経験 不問<small>チーム開発も未経験可</small></dd></div>
@@ -949,6 +1058,11 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
           <p>この引き出しが増えたことが、他では得られない財産なんですね。</p>
         </div>
 
+        <figure class="fig rise">
+          <img src="./assets/event-mokumoku-2026-06.webp" width="1600" height="903" loading="lazy" alt="窓の外に緑が見える部屋で、10人ほどがコの字に並べた机を囲み、ノートPCを開いて話しながら作業している様子">
+          <figcaption>AIMARKのオフラインもくもく会の様子（2026年6月）</figcaption>
+        </figure>
+
         <h2 class="rise">AIを使っても上手くいかない…<br>課題を突破する力は、これで身につきました</h2>
 
         <div class="blk rise">
@@ -1006,6 +1120,11 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
           <p>引き出しが増えて、AI友達も増えるなんて、一石二鳥じゃないですか。</p>
         </div>
 
+        <figure class="fig rise">
+          <img src="./assets/jadecon-booth_1400.webp" width="1400" height="1050" loading="lazy" alt="AIMARKのロゴが映ったモニターを囲んで、5人がステッカーを手に笑顔でポーズをとっている出展ブースの様子">
+          <figcaption>イベント出展時のAIMARKブースにて</figcaption>
+        </figure>
+
         <h2 class="rise">アプリを作ったことがない方にも、<br>ぜひ来ていただきたいです。</h2>
         <h2 class="rise">なぜなら…</h2>
 
@@ -1032,6 +1151,17 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
           <p>そして、AIMARKの皆さんは本当にいい人ばかりですから、間違いなく「参加してよかったー！楽しかったー！」と思える、実りある1日になりますよ🤭</p>
           <p><strong>「AI好きな人たちとワイワイしながら、色んなAIの使い方を知りたい」</strong>という方は、ぜひ奮って参加してください。</p>
           <p>一緒にアプリ開発を楽しみましょう😆</p>
+        </div>
+
+        <div class="applycard rise">
+          <div>
+            <p class="limit"><span class="limit__tag">一般募集</span><span class="limit__num"><b>3</b>名限定</span></p>
+            <p class="applycard__lead"><span class="nb">11月21日（土）・西新宿・</span><span class="nb">参加費3,000円（税込）</span></p>
+          </div>
+          <div class="applycard__act">
+            <a class="btn-apply" href="https://docs.google.com/forms/d/e/1FAIpQLSf2Q5C-8WGc7jw5pLVw1liBPY9jyY6YW6gpitbReQmep-fyqg/viewform" target="_blank" rel="noopener"><span>参加を申し込む</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <p class="apply__sub">申込フォームが新しいタブで開きます</p>
+          </div>
         </div>
 
       </div>
@@ -1123,6 +1253,16 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
           <p>時間は目安です。正直に書くと、運営も全員、この形式のイベントは初めてです。だから細かい手順書は用意せず、チームの判断で前後させてもらう進行にしています。</p>
           <p>代わりに、12:45の中間共有で、各チームがテーマと進捗を5分ずつ話します。他のチームの切り口が耳に入るのは、ここが最初です。</p>
         </div>
+        <div class="applycard rise">
+          <div>
+            <p class="limit"><span class="limit__tag">一般募集</span><span class="limit__num"><b>3</b>名限定</span></p>
+            <p class="applycard__lead"><span class="nb">11月21日（土）・西新宿・</span><span class="nb">参加費3,000円（税込）</span></p>
+          </div>
+          <div class="applycard__act">
+            <a class="btn-apply" href="https://docs.google.com/forms/d/e/1FAIpQLSf2Q5C-8WGc7jw5pLVw1liBPY9jyY6YW6gpitbReQmep-fyqg/viewform" target="_blank" rel="noopener"><span>参加を申し込む</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <p class="apply__sub">申込フォームが新しいタブで開きます</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1188,7 +1328,7 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
           <p class="step__no"><b>01</b><span>Apply</span></p>
           <h3>フォームから申し込む</h3>
           <p>お名前、連絡先、普段使っているAIなどをご入力ください。チーム分けの参考にします。</p>
-          <p><a class="inl" href="https://docs.google.com/forms/d/e/1FAIpQLSf2Q5C-8WGc7jw5pLVw1liBPY9jyY6YW6gpitbReQmep-fyqg/viewform" target="_blank" rel="noopener">申込フォームを開く</a></p>
+          <a class="btn-apply btn-apply--sm" href="https://docs.google.com/forms/d/e/1FAIpQLSf2Q5C-8WGc7jw5pLVw1liBPY9jyY6YW6gpitbReQmep-fyqg/viewform" target="_blank" rel="noopener"><span>参加を申し込む</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </li>
         <li class="step rise">
           <p class="step__no"><b>02</b><span>Confirm</span></p>
@@ -1265,10 +1405,11 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
     <div class="shell">
       <div class="cta__inner">
         <p class="eyebrow">Apply</p>
+        <p class="limit"><span class="limit__tag">一般募集</span><span class="limit__num"><b>3</b>名限定</span></p>
         <h2>11月21日（土）、<br><span class="nb">丸一日だけ</span><span class="nb">空けておいてください。</span></h2>
         <p>朝は、隣の人が何をやっている人かも知りません。夕方には、その人の手元を丸一日ぶん見終わっています。</p>
-        <p>一般募集の枠は3名限定。参加費は3,000円（税込）です。</p>
-        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSf2Q5C-8WGc7jw5pLVw1liBPY9jyY6YW6gpitbReQmep-fyqg/viewform" target="_blank" rel="noopener">参加を申し込む <span>APPLY</span></a>
+        <p>一般募集の枠は<strong class="nb">3名限定</strong>。参加費は<span class="nb">3,000円（税込）</span>です。</p>
+        <div><a class="btn-apply btn-apply--xl" href="https://docs.google.com/forms/d/e/1FAIpQLSf2Q5C-8WGc7jw5pLVw1liBPY9jyY6YW6gpitbReQmep-fyqg/viewform" target="_blank" rel="noopener"><span>参加を申し込む</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         <p class="cta__note">申込フォームが新しいタブで開きます。フォームの送信だけでは参加は確定しません。参加可否・お支払い方法・当日の詳細は、運営からご案内します。</p>
       </div>
     </div>
@@ -1279,11 +1420,18 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
       <div class="foot">
         <p>主催 — AIMARK運営委員会</p>
         <p>売れるアプリ開発 1DAYチャレンジ会</p>
-        <p>※掲載内容は暫定です／画像はすべてイメージです</p>
+        <p>※掲載内容は暫定です／一部の画像はイメージです</p>
       </div>
     </div>
   </footer>
 
+</div>
+
+<div class="applybar" id="applyBar">
+  <div class="shell applybar__in">
+    <p class="applybar__txt"><b><em>3名限定</em>一般募集 受付中</b><small>11月21日（土）・西新宿・参加費3,000円（税込）</small></p>
+    <a class="btn-apply" href="https://docs.google.com/forms/d/e/1FAIpQLSf2Q5C-8WGc7jw5pLVw1liBPY9jyY6YW6gpitbReQmep-fyqg/viewform" target="_blank" rel="noopener"><span>参加を申し込む</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
 </div>
 
 <script>
@@ -1327,6 +1475,18 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
     }, { passive: true });
     window.addEventListener("resize", paint);
     paint();
+  }
+  /* 画面下の申込バー：ヒーローと最後の申込エリアが見えていない間だけ出す */
+  var bar = document.getElementById("applyBar");
+  var heroEl = document.querySelector(".hero");
+  var ctaEl = document.getElementById("apply");
+  if (bar && heroEl && ctaEl && "IntersectionObserver" in window){
+    var seen = { hero: true, cta: false };
+    var bio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ seen[e.target === heroEl ? "hero" : "cta"] = e.isIntersecting; });
+      bar.classList.toggle("is-on", !seen.hero && !seen.cta);
+    });
+    bio.observe(heroEl); bio.observe(ctaEl);
   }
 })();
 </script>
