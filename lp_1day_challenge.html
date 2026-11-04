@@ -566,6 +566,10 @@ figure{ margin: 0; }
 .tt tr.is-key td:last-child{ font-weight:700; }
 .tt tbody tr{ transition: background-color .25s ease; }
 .tt tbody tr:hover{ background: rgba(255,255,255,.55); }
+.tt__caution{
+  margin: .9rem 0 0; font-family: var(--font-display); font-weight:500;
+  font-size:.86rem; line-height:1.7; color: var(--ink-2);
+}
 .tt__note{ margin-top: 1.6rem; max-width: var(--measure); font-size:.96rem; }
 /* 狭い画面：横スクロールさせず、内容を折り返して見せる */
 @media (max-width: 560px){
@@ -1114,6 +1118,7 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
             </tbody>
           </table>
         </div>
+        <p class="tt__caution">※当日の進行状況により、タイムテーブルは予告なく変更する場合があります。</p>
         <div class="tt__note">
           <p>時間は目安です。正直に書くと、運営も全員、この形式のイベントは初めてです。だから細かい手順書は用意せず、チームの判断で前後させてもらう進行にしています。</p>
           <p>代わりに、12:45の中間共有で、各チームがテーマと進捗を5分ずつ話します。他のチームの切り口が耳に入るのは、ここが最初です。</p>
