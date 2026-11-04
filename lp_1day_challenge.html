@@ -110,7 +110,8 @@ body{
   font-family: var(--font-util); font-weight: 600; font-size: 1.05rem;
   letter-spacing: .06em; color: var(--accent-dp); font-variant-numeric: tabular-nums;
 }
-@media (min-width: 1180px){ .rail{ display:block; } }
+/* 本文の左に時刻レール分の余白がある幅でだけ出す（狭いとロゴや本文に重なる） */
+@media (min-width: 1360px){ .rail{ display:block; } }
 
 /* ── 共通パーツ ───────────────────────────────── */
 .eyebrow{
@@ -813,7 +814,7 @@ footer{ background: var(--dusk); color: var(--dusk-ink-2); padding-bottom: clamp
         <div class="hero__copy">
 
           <div class="hero__brand rise d1">
-            <img class="hero__logo" src="./assets/logo_aimark.png" width="348" height="324" alt="aimark">
+            <img class="hero__logo" src="./assets/logo_aimark_official.webp" width="196" height="203" alt="aimark">
             <p class="hero__names">
               <b>AIMARK &times; TEAM &times; AI</b>
               <i>1DAY HACKATHON</i>
